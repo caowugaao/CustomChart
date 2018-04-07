@@ -4,10 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -15,14 +17,16 @@ import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.animation.DecelerateInterpolator;
 
+import com.gx.morgan.chartlib.R;
 import com.gx.morgan.chartlib.utils.MathUtil;
 import com.gx.morgan.chartlib.utils.ViewUtil;
 
-import java.util.ArrayList;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
 /**
- * description：条形图
+ * description：柱状图
  * <br>author：caowugao
  * <br>time：2018/3/16 17:56
  */
@@ -58,7 +62,7 @@ public class StatisticsBar extends CustomView {
     private boolean animate = true;//是否需要动画
     private SparseIntArray heightValueMap;
     private SparseArray<ValueAnimator> animatorMap;
-    private boolean animateStarted=false;//动画是否已经开始
+    private boolean animateStarted = false;//动画是否已经开始
 
     public static class XCoordinateBulgeDirection {
         private XCoordinateBulgeDirection() {
@@ -66,6 +70,11 @@ public class StatisticsBar extends CustomView {
 
         public static final int UP = 1;
         public static final int DOWN = 2;
+    }
+
+    @Retention(RetentionPolicy.CLASS)
+    @IntDef({XCoordinateBulgeDirection.UP, XCoordinateBulgeDirection.DOWN})
+    public @interface XCoordinateBulgeDirectionType {
     }
 
     public static class ContentData {
@@ -123,39 +132,26 @@ public class StatisticsBar extends CustomView {
         unitDescTextColor = yTextColor;
 
 
-        xCoodinateUnitDesc = "月份";
-        yCoodinateUnitDesc = "台";
+        xCoodinateUnitDesc = "";
+        yCoodinateUnitDesc = "";
 
 
-        int xDataSize = 8;
-        xCoodinateDatas = new ArrayList<>(xDataSize);
-        for (int i = 0; i < xDataSize; i++) {
-            xCoodinateDatas.add(i + 1);
-        }
+        initAttr(context, attrs);
 
 
-        int yDataSize = 7;
-        yCoodinateDatas = new ArrayList<>(yDataSize);
-        for (int i = 0; i < yDataSize; i++) {
-            yCoodinateDatas.add(8 * i);
-        }
+    }
 
+    private void initAnimator(final int contentDataSize) {
+        if (animate) {
 
-        final int contentDataSize = 8;
-        contentDatas = new ArrayList<>(contentDataSize);
-        int[] datas = new int[]{24, 48, 40, 8, 0, 16, 32, 48};
-        for (int i = 0; i < contentDataSize; i++) {
-            ContentData contentData = new ContentData(i + 1, datas[i]);
-            contentDatas.add(contentData);
-        }
+            if (null == animatorMap) {
+                animatorMap = new SparseArray<>();
+            }
 
-
-        if(animate){
-
-            animatorMap = new SparseArray<>();
-            heightValueMap = new SparseIntArray();
-
-            for (int i = 0; i <contentDataSize ; i++) {
+            if (null == heightValueMap) {
+                heightValueMap = new SparseIntArray();
+            }
+            for (int i = 0; i < contentDataSize; i++) {
                 ValueAnimator animator = ValueAnimator.ofInt();
                 animator.setDuration(500);
                 animator.setInterpolator(new DecelerateInterpolator());
@@ -164,7 +160,7 @@ public class StatisticsBar extends CustomView {
                     @Override
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
                         int baeHeightValue = (int) valueAnimator.getAnimatedValue();
-                        heightValueMap.put(finalI,baeHeightValue);
+                        heightValueMap.put(finalI, baeHeightValue);
                         invalidate();
                     }
                 });
@@ -172,14 +168,48 @@ public class StatisticsBar extends CustomView {
                 animator.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation, boolean isReverse) {
-                        if(finalI1 ==contentDataSize-1){
-                            animateStarted=false;
+                        if (finalI1 == contentDataSize - 1) {
+                            animateStarted = false;
                         }
                     }
                 });
-                animatorMap.put(i,animator);
+                animatorMap.put(i, animator);
             }
         }
+    }
+
+    private void initAttr(Context context, AttributeSet attrs) {
+
+        TypedArray typedArray = null;
+        if (attrs != null) {
+            typedArray = context.obtainStyledAttributes(attrs, R.styleable.StatisticsBar);
+        }
+        xTextSize = ViewUtil.optPixelSize(typedArray, R.styleable.StatisticsBar_xTextSize, xTextSize);
+        yTextSize = ViewUtil.optPixelSize(typedArray, R.styleable.StatisticsBar_yTextSize, yTextSize);
+        xTextColor = ViewUtil.optColor(typedArray, R.styleable.StatisticsBar_xTextColor, xTextColor);
+        yTextColor = ViewUtil.optColor(typedArray, R.styleable.StatisticsBar_yTextColor, yTextColor);
+        statisticBarColor = ViewUtil.optColor(typedArray, R.styleable.StatisticsBar_statisticBarColor,
+                statisticBarColor);
+        statisticBarWidth = ViewUtil.optPixelSize(typedArray, R.styleable.StatisticsBar_statisticBarWidth,
+                statisticBarWidth);
+        textCoordinatePadding = ViewUtil.optPixelSize(typedArray, R.styleable.StatisticsBar_textCoordinatePadding,
+                textCoordinatePadding);
+        contentPadding = ViewUtil.optPixelSize(typedArray, R.styleable.StatisticsBar_contentPadding, contentPadding);
+        xCoordinateBulgeDistance = ViewUtil.optPixelSize(typedArray, R.styleable
+                .StatisticsBar_xCoordinateBulgeDistance, xCoordinateBulgeDistance);
+        xCoordinateBulgeDirection = ViewUtil.optInt(typedArray, R.styleable.StatisticsBar_xCoordinateBulgeDirection,
+                XCoordinateBulgeDirection.DOWN);
+        coodinatateColor = ViewUtil.optColor(typedArray, R.styleable.StatisticsBar_coodinatateColor, coodinatateColor);
+        xCoodinateUnitDesc = ViewUtil.optString(typedArray, R.styleable.StatisticsBar_xCoodinateUnitDesc,
+                xCoodinateUnitDesc);
+        yCoodinateUnitDesc = ViewUtil.optString(typedArray, R.styleable.StatisticsBar_yCoodinateUnitDesc,
+                yCoodinateUnitDesc);
+        unitDescTextSize = ViewUtil.optPixelSize(typedArray, R.styleable.StatisticsBar_unitDescTextSize,
+                unitDescTextSize);
+        unitDescTextColor = ViewUtil.optColor(typedArray, R.styleable.StatisticsBar_unitDescTextColor,
+                unitDescTextColor);
+        animate = ViewUtil.optBoolean(typedArray, R.styleable.StatisticsBar_animate, true);
+
     }
 
 
@@ -209,20 +239,179 @@ public class StatisticsBar extends CustomView {
 
     }
 
-    public void setBarWidth(int barWidth) {
-//        param.setBarWidth(barWidth);
+    public void setxTextSize(int xTextSize) {
+        if (this.xTextSize != xTextSize) {
+            this.xTextSize = xTextSize;
+            invalidate();
+        }
+    }
+
+    public void setyTextSize(int yTextSize) {
+        if (this.yTextSize != yTextSize) {
+            this.yTextSize = yTextSize;
+            invalidate();
+        }
+    }
+
+    public void setxTextColor(int xTextColor) {
+        if (this.xTextColor != xTextColor) {
+            this.xTextColor = xTextColor;
+            invalidate();
+        }
+    }
+
+    public void setyTextColor(int yTextColor) {
+        if (this.yTextColor != yTextColor) {
+            this.yTextColor = yTextColor;
+            invalidate();
+        }
+    }
+
+    public void setStatisticBarColor(int statisticBarColor) {
+        if (this.statisticBarColor != statisticBarColor) {
+            this.statisticBarColor = statisticBarColor;
+            invalidate();
+        }
+    }
+
+    public void setStatisticBarWidth(int statisticBarWidth) {
+        if (this.statisticBarWidth != statisticBarWidth) {
+            this.statisticBarWidth = statisticBarWidth;
+            invalidate();
+        }
+    }
+
+    public void setTextCoordinatePadding(int textCoordinatePadding) {
+        if (this.textCoordinatePadding != textCoordinatePadding) {
+            this.textCoordinatePadding = textCoordinatePadding;
+            invalidate();
+        }
+    }
+
+    public void setxCoodinateDatas(List<Integer> xCoodinateDatas) {
+
+        checkEmpty(xCoodinateDatas, "xCoodinateDatas");
+
+        this.xCoodinateDatas = xCoodinateDatas;
+
+        if (null == yCoodinateDatas || yCoodinateDatas.isEmpty() || null == contentDatas || contentDatas.isEmpty()) {
+            return;
+        }
         invalidate();
     }
 
-//    public void setDatas(List<AbstractCoordinate.Data> datas) {
-////        param.setDatas(datas);
-//        invalidate();
-//    }
+    public void setyCoodinateDatas(List<Integer> yCoodinateDatas) {
+        checkEmpty(yCoodinateDatas, "yCoodinateDatas");
+        this.yCoodinateDatas = yCoodinateDatas;
+        if (null == xCoodinateDatas || xCoodinateDatas.isEmpty() || null == contentDatas || contentDatas.isEmpty()) {
+
+            return;
+        }
+        invalidate();
+    }
+
+    public void setContentPadding(int contentPadding) {
+        if (this.contentPadding != contentPadding) {
+            this.contentPadding = contentPadding;
+            invalidate();
+        }
+    }
+
+    public void setxCoordinateBulgeDistance(int xCoordinateBulgeDistance) {
+        if (this.xCoordinateBulgeDistance != xCoordinateBulgeDistance) {
+            this.xCoordinateBulgeDistance = xCoordinateBulgeDistance;
+            invalidate();
+        }
+    }
+
+    public void setxCoordinateBulgeDirection(@XCoordinateBulgeDirectionType int xCoordinateBulgeDirection) {
+        if (this.xCoordinateBulgeDirection != xCoordinateBulgeDirection) {
+            this.xCoordinateBulgeDirection = xCoordinateBulgeDirection;
+            invalidate();
+        }
+    }
+
+    public void setCoodinatateColor(int coodinatateColor) {
+        if (this.coodinatateColor != coodinatateColor) {
+            this.coodinatateColor = coodinatateColor;
+            invalidate();
+        }
+    }
+
+    public void setContentDatas(List<ContentData> contentDatas) {
+        checkEmpty(contentDatas, "contentDatas");
+
+        this.contentDatas = contentDatas;
+        initAnimator(contentDatas.size());
+        if (null == xCoodinateDatas || xCoodinateDatas.isEmpty() || null == yCoodinateDatas || yCoodinateDatas
+                .isEmpty()) {
+            return;
+        }
+        invalidate();
+    }
+
+    public void setFullData(List<Integer> xCoodinateDatas, List<Integer> yCoodinateDatas, List<ContentData>
+            contentDatas) {
+
+
+        this.xCoodinateDatas = xCoodinateDatas;
+        this.yCoodinateDatas = yCoodinateDatas;
+        this.contentDatas = contentDatas;
+
+        checkEmpty(xCoodinateDatas, "xCoodinateDatas");
+        checkEmpty(yCoodinateDatas, "yCoodinateDatas");
+        checkEmpty(contentDatas, "contentDatas");
+        initAnimator(contentDatas.size());
+
+        invalidate();
+    }
+
+    private <T> void checkEmpty(List<T> datas, String target) {
+        if (null == datas || datas.isEmpty()) {
+            throw new NullPointerException(target + " cannor be NULL or empty");
+        }
+    }
+
+    public void setxCoodinateUnitDesc(String xCoodinateUnitDesc) {
+        if (!this.xCoodinateUnitDesc.equals(xCoodinateUnitDesc)) {
+            this.xCoodinateUnitDesc = xCoodinateUnitDesc;
+            invalidate();
+        }
+    }
+
+    public void setyCoodinateUnitDesc(String yCoodinateUnitDesc) {
+        if (!this.yCoodinateUnitDesc.equals(yCoodinateUnitDesc)) {
+            this.yCoodinateUnitDesc = yCoodinateUnitDesc;
+            invalidate();
+        }
+    }
+
+    public void setUnitDescTextSize(int unitDescTextSize) {
+        if (this.unitDescTextSize != unitDescTextSize) {
+            this.unitDescTextSize = unitDescTextSize;
+            invalidate();
+        }
+    }
+
+    public void setUnitDescTextColor(int unitDescTextColor) {
+        if (this.unitDescTextColor != unitDescTextColor) {
+            this.unitDescTextColor = unitDescTextColor;
+            invalidate();
+        }
+    }
+
+    public void setAnimate(boolean animate) {
+        this.animate = animate;
+        if (animate) {
+            if (null != contentDatas && !contentDatas.isEmpty()) {
+                initAnimator(contentDatas.size());
+            }
+        }
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-//        canvas.drawColor(Color.GRAY);
         drawStatisticBar(canvas);
     }
 
@@ -374,23 +563,19 @@ public class StatisticsBar extends CustomView {
 
         paint.setTextAlign(Paint.Align.LEFT);
 
-        if(animateStarted){//动画是否已经开始
+        if (animateStarted) {//动画是否已经开始
 
             for (int i = 0, size = contentDatas.size(); i < size; i++) {
 
                 //画柱状
                 ContentData contentData = contentDatas.get(i);
-//                statisicBarHeight = (int) ((contentData.y * 1.0 / yCoodinateMaxData) * yCoodinateDistance);
-//                statisicBarHeight = 0 == statisicBarHeight ? (int) dp2 : statisicBarHeight;//柱状高度为0就附上2dp
-
                 statisicBarHeight = heightValueMap.get(i);
                 drawSingleBar(canvas, coodinateXStartX, coodinateXStartY, xCoordinateDistance, xSpacing,
                         xCoodinateMaxData, statisicBarHeight, contentData);
 
             }
-        }
-        else {//动画还没开始
-            animateStarted=true;
+        } else {//动画还没开始
+            animateStarted = true;
             for (int i = 0, size = contentDatas.size(); i < size; i++) {
 
                 //画柱状
@@ -399,18 +584,18 @@ public class StatisticsBar extends CustomView {
                 statisicBarHeight = 0 == statisicBarHeight ? (int) dp2 : statisicBarHeight;//柱状高度为0就附上2dp
 
                 ValueAnimator animator = animatorMap.get(i);
-                if(null!=animator){
-                    if(animator.isRunning()){
+                if (null != animator) {
+                    if (animator.isRunning()) {
                         animator.cancel();
                     }
-                    animator.setIntValues(0,statisicBarHeight);
+                    animator.setIntValues(0, statisicBarHeight);
                 }
             }
 
 
             for (int i = 0, size = contentDatas.size(); i < size; i++) {
                 ValueAnimator animator = animatorMap.get(i);
-                if(null!=animator){
+                if (null != animator) {
                     animator.start();
                 }
             }
@@ -453,78 +638,6 @@ public class StatisticsBar extends CustomView {
         canvas.drawText(text, textStartX, textStartY, paint);
     }
 
-//    private void drawSingleBar(final Canvas canvas, final int coodinateXStartX, final int coodinateXStartY, final
-// int xCoordinateDistance,
-//                               final int xSpacing, final int xCoodinateMaxData, final int statisicBarHeight, final
-// ContentData contentData) {
-//
-//        if(!animate){//没有动画
-//            paint.setStyle(Paint.Style.FILL);
-//            paint.setColor(statisticBarColor);
-//            int textStartX;
-//            int textStartY;
-//            int left= (int) (coodinateXStartX+(contentData.x*1.0/xCoodinateMaxData)
-// *xCoordinateDistance-xSpacing/2-statisticBarWidth/2);
-//            int top=coodinateXStartY-statisicBarHeight;
-//            int right=left+statisticBarWidth;
-//            int bottom=coodinateXStartY;
-//            canvas.drawRect( left,  top,  right,  bottom,paint);
-//
-//
-//            //画柱状图顶部的数字
-//            paint.setStyle(Paint.Style.STROKE);
-//            paint.setTextSize(yTextSize);
-//            paint.setColor(yTextColor);
-//            String text=String.valueOf(contentData.y);
-//            paint.getTextBounds(text,0,text.length(),textBound);
-//            int textWidth=textBound.width();
-//            textStartX=left+statisticBarWidth/2-textWidth/2;
-//            textStartY=top-textCoordinatePadding;
-//            canvas.drawText(text,textStartX,textStartY,paint);
-//        }
-//        else {//动画
-//            ValueAnimator animator=ValueAnimator.ofInt(0,statisicBarHeight/6,statisicBarHeight/3,statisicBarHeight);
-//            animator.setDuration(500);
-//            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//                @Override
-//                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-//                    int value = (int) valueAnimator.getAnimatedValue();
-//                    drawSingleBarWithAnimate( canvas,  coodinateXStartX,  coodinateXStartY,  xCoordinateDistance,
-//                     xSpacing,  xCoodinateMaxData,  value,  contentData);
-//                }
-//            });
-//            animator.start();
-//        }
-//    }
-
-//    private void drawSingleBarWithAnimate(Canvas canvas, int coodinateXStartX, int coodinateXStartY, int
-// xCoordinateDistance,
-//                                          int xSpacing, int xCoodinateMaxData, int barHeightAnimateValue,
-// ContentData contentData) {
-//        paint.setStyle(Paint.Style.FILL);
-//        paint.setColor(statisticBarColor);
-//        int textStartX;
-//        int textStartY;
-//        int left= (int) (coodinateXStartX+(contentData.x*1.0/xCoodinateMaxData)
-// *xCoordinateDistance-xSpacing/2-statisticBarWidth/2);
-//        int top=coodinateXStartY-barHeightAnimateValue;
-//        int right=left+statisticBarWidth;
-//        int bottom=coodinateXStartY;
-//        canvas.drawRect( left,  top,  right,  bottom,paint);
-//
-//
-//        //画柱状图顶部的数字
-//        paint.setStyle(Paint.Style.STROKE);
-//        paint.setTextSize(yTextSize);
-//        paint.setColor(yTextColor);
-//        String text=String.valueOf(contentData.y);
-//        paint.getTextBounds(text,0,text.length(),textBound);
-//        int textWidth=textBound.width();
-//        textStartX=left+statisticBarWidth/2-textWidth/2;
-//        textStartY=top-textCoordinatePadding;
-//        canvas.drawText(text,textStartX,textStartY,paint);
-//    }
-
     private float getMaxTextWidth(List coodinateDatas, Paint paint) {
         float[] widths = new float[coodinateDatas.size()];
         for (int i = 0, length = coodinateDatas.size(); i < length; i++) {
@@ -534,11 +647,11 @@ public class StatisticsBar extends CustomView {
         return MathUtil.max(widths);
     }
 
-    public static float getTextWidth(String text, Paint paint) {
+    private static float getTextWidth(String text, Paint paint) {
         return paint.measureText(text);
     }
 
-    public static float getTextHeight(Paint paint) {
+    private static float getTextHeight(Paint paint) {
         return (-paint.ascent() + paint.descent());
     }
 }
