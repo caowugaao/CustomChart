@@ -10,6 +10,7 @@
 
 
     <com.gx.morgan.chartlib.view.StatisticsBar
+        android:id="@+id/statisticsBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -17,6 +18,22 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:xTextSize="14sp"
+        app:yTextSize="14sp"
+        app:xTextColor="@android:color/black"
+        app:yTextColor="@android:color/black"
+        app:statisticBarColor="@color/colorPrimaryDark"
+        app:statisticBarWidth="12dp"
+        app:textCoordinatePadding="5dp"
+        app:contentPadding="5dp"
+        app:xCoordinateBulgeDistance="5dp"
+        app:xCoordinateBulgeDirection="up"
+        app:coodinatateColor="@android:color/black"
+        app:xCoodinateUnitDesc="月"
+        app:yCoodinateUnitDesc="台"
+        app:unitDescTextSize="12sp"
+        app:unitDescTextColor="@android:color/black"
+        app:animate="true"
         />
 
 </android.support.constraint.ConstraintLayout>

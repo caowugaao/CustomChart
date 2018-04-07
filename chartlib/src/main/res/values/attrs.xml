@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="StatisticsBar">
+        <attr name="xTextSize" format="dimension|reference"/>
+        <attr name="yTextSize" format="dimension|reference"/>
+        <attr name="xTextColor" format="color|reference"/>
+        <attr name="yTextColor" format="color|reference"/>
+        <attr name="statisticBarColor" format="color|reference"/>
+        <attr name="statisticBarWidth" format="dimension|reference"/>
+        <attr name="textCoordinatePadding" format="dimension|reference"/>
+        <attr name="contentPadding" format="dimension|reference"/>
+        <attr name="xCoordinateBulgeDistance" format="dimension|reference"/>
+
+        <attr name="xCoordinateBulgeDirection" format="enum">
+            <enum name="up" value="1"/>
+            <enum name="down" value="2"/>
+        </attr>
+        <attr name="coodinatateColor" format="color|reference"/>
+        <attr name="xCoodinateUnitDesc" format="string|reference"/>
+        <attr name="yCoodinateUnitDesc" format="string|reference"/>
+        <attr name="unitDescTextSize" format="dimension|reference"/>
+        <attr name="unitDescTextColor" format="color|reference"/>
+        <attr name="animate" format="boolean|reference"/>
+
+
+    </declare-styleable>
+</resources>
