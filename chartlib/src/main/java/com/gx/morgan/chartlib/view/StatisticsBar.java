@@ -121,11 +121,11 @@ public class StatisticsBar extends BaseCoordinateView {
                 .StatisticsBar_xCoordinateBulgeDistance, xCoordinateBulgeDistance);
         xCoordinateBulgeDirection = ViewUtil.optInt(typedArray, R.styleable.StatisticsBar_xCoordinateBulgeDirection,
                 XCoordinateBulgeDirection.DOWN);
-        coodinatateColor = ViewUtil.optColor(typedArray, R.styleable.StatisticsBar_coodinatateColor, coodinatateColor);
-        xCoodinateUnitDesc = ViewUtil.optString(typedArray, R.styleable.StatisticsBar_xCoodinateUnitDesc,
-                xCoodinateUnitDesc);
-        yCoodinateUnitDesc = ViewUtil.optString(typedArray, R.styleable.StatisticsBar_yCoodinateUnitDesc,
-                yCoodinateUnitDesc);
+        coordinatateColor = ViewUtil.optColor(typedArray, R.styleable.StatisticsBar_coordinatateColor, coordinatateColor);
+        xCoordinateUnitDesc = ViewUtil.optString(typedArray, R.styleable.StatisticsBar_xCoordinateUnitDesc,
+                xCoordinateUnitDesc);
+        yCoordinateUnitDesc = ViewUtil.optString(typedArray, R.styleable.StatisticsBar_yCoordinateUnitDesc,
+                yCoordinateUnitDesc);
         unitDescTextSize = ViewUtil.optPixelSize(typedArray, R.styleable.StatisticsBar_unitDescTextSize,
                 unitDescTextSize);
         unitDescTextColor = ViewUtil.optColor(typedArray, R.styleable.StatisticsBar_unitDescTextColor,
@@ -199,15 +199,19 @@ public class StatisticsBar extends BaseCoordinateView {
         }
     }
 
+    @Override
+    protected boolean isXCoordinateDataInBulge() {
+        return false;
+    }
 
 
     private void drawSingleBar(Canvas canvas, int coodinateXStartX, int coodinateXStartY, int xCoordinateDistance,
-                               int xSpacing, int xCoodinateMaxData, int barHeight, ContentData contentData) {
+                               int xSpacing, int xCoodinateDataRangeLength, int barHeight, ContentData contentData) {
         int textStartX;
         int textStartY;
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(statisticBarColor);
-        int left = (int) (coodinateXStartX + (contentData.x * 1.0 / xCoodinateMaxData) * xCoordinateDistance -
+        int left = (int) (coodinateXStartX + (contentData.x * 1.0 / xCoodinateDataRangeLength) * xCoordinateDistance -
                 xSpacing / 2 - statisticBarWidth / 2);
         int top = coodinateXStartY - barHeight;
         int right = left + statisticBarWidth;
@@ -228,33 +232,33 @@ public class StatisticsBar extends BaseCoordinateView {
     }
     /**
      * @param canvas
-     * @param coodinateXStartX x轴开始横坐标
-     * @param coodinateXStartY x轴开始纵坐标
-     * @param coodinateXStopX x轴结束横坐标
-     * @param coodinateXStopY x轴结束纵坐标
-     * @param coodinateYStartX y轴开始横坐标
-     * @param coodinateYStartY y轴开始纵坐标
-     * @param coodinateYStopX y轴结束横坐标
-     * @param coodinateYStopY y轴结束纵坐标
+     * @param coordinateXStartX x轴开始横坐标
+     * @param coordinateXStartY x轴开始纵坐标
+     * @param coordinateXStopX x轴结束横坐标
+     * @param coordinateXStopY x轴结束纵坐标
+     * @param coordinateYStartX y轴开始横坐标
+     * @param coordinateYStartY y轴开始纵坐标
+     * @param coordinateYStopX y轴结束横坐标
+     * @param coordinateYStopY y轴结束纵坐标
      */
     @Override
-    protected void onDrawSelfContent(Canvas canvas, int coodinateXStartX, int coodinateXStartY, int coodinateXStopX,
-                                     int coodinateXStopY, int coodinateYStartX, int coodinateYStartY, int
-                                           coodinateYStopX, int coodinateYStopY) {
+    protected void onDrawSelfContent(Canvas canvas, int coordinateXStartX, int coordinateXStartY, int coordinateXStopX,
+                                     int coordinateXStopY, int coordinateYStartX, int coordinateYStartY, int
+                                             coordinateYStopX, int coordinateYStopY) {
 
 
 
-        int xDataSize=xCoodinateDatas.size();
-        int yDataSize=yCoodinateDatas.size();
+        int xDataSize= xCoordinateDatas.size();
+        int yDataSize= yCoordinateDatas.size();
 
-        int yCoodinateDistance=Math.abs(coodinateYStopY-coodinateYStartY);//y轴长度
-        int xCoordinateDistance=Math.abs(coodinateXStopX-coodinateXStartX);//x轴长度
+        int yCoodinateDistance=Math.abs(coordinateYStopY - coordinateYStartY);//y轴长度
+        int xCoordinateDistance=Math.abs(coordinateXStopX -coordinateXStartX);//x轴长度
         int xSpacing=xCoordinateDistance/xDataSize;
 
         //画柱状图
-        int xCoodinateMaxData = xCoodinateDatas.get(xDataSize - 1);//x轴最大数字
-        int yCoodinateMaxData = yCoodinateDatas.get(yDataSize - 1) + yCoodinateDatas.get(yDataSize - 1) -
-                yCoodinateDatas.get(yDataSize - 2);//y轴最大数字
+        int xCoordinateDataRangeLength = xCoordinateDatas.get(xDataSize - 1);//x轴数据区间长度
+        int yCoodinateDataRangLength = yCoordinateDatas.get(yDataSize - 1) + yCoordinateDatas.get(yDataSize - 1) -
+                yCoordinateDatas.get(yDataSize - 2)-yCoordinateDatas.get(0);//y轴数据区间长度
         int statisicBarHeight = 0;
 
         paint.setTextAlign(Paint.Align.LEFT);
@@ -266,8 +270,8 @@ public class StatisticsBar extends BaseCoordinateView {
                 //画柱状
                 ContentData contentData = contentDatas.get(i);
                 statisicBarHeight = heightValueMap.get(i);
-                drawSingleBar(canvas, coodinateXStartX, coodinateXStartY, xCoordinateDistance, xSpacing,
-                        xCoodinateMaxData, statisicBarHeight, contentData);
+                drawSingleBar(canvas, coordinateXStartX, coordinateXStartY, xCoordinateDistance, xSpacing,
+                        xCoordinateDataRangeLength, statisicBarHeight, contentData);
 
             }
         } else {//动画还没开始
@@ -276,7 +280,7 @@ public class StatisticsBar extends BaseCoordinateView {
 
                 //画柱状
                 ContentData contentData = contentDatas.get(i);
-                statisicBarHeight = (int) ((contentData.y * 1.0 / yCoodinateMaxData) * yCoodinateDistance);
+                statisicBarHeight = (int) ((contentData.y * 1.0 / yCoodinateDataRangLength) * yCoodinateDistance);
                 statisicBarHeight = 0 == statisicBarHeight ? (int) dp2 : statisicBarHeight;//柱状高度为0就附上2dp
 
                 ValueAnimator animator = animatorMap.get(i);

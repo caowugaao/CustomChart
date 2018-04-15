@@ -34,22 +34,24 @@ public abstract class BaseCoordinateView extends CustomView {
 
     protected int textCoordinatePadding;//数字与坐标轴的距离
     protected Rect textBound;
-    protected List<Integer> xCoodinateDatas;//x轴上的数字
-    protected List<Integer> yCoodinateDatas;//y轴上的数字
+    protected List<Integer> xCoordinateDatas;//x轴上的数字
+    protected List<Integer> yCoordinateDatas;//y轴上的数字
     protected int contentPadding;//内容与view边界的距离
     protected int xCoordinateBulgeDistance;//x轴凸起距离
     protected int xCoordinateBulgeDirection;//x轴凸起方向
-    protected int coodinatateColor;//坐标轴颜色
+    protected int coordinatateColor;//坐标轴颜色
     protected int arrowHeight;//箭头高度
     protected int arrowWidth;//箭头宽度
     protected List<ContentData> contentDatas;//内容x、y数据
-    protected String xCoodinateUnitDesc;//x轴单位说明
-    protected String yCoodinateUnitDesc;//y轴单位说明
+    protected String xCoordinateUnitDesc;//x轴单位说明
+    protected String yCoordinateUnitDesc;//y轴单位说明
     protected int unitDescTextSize;
     protected int unitDescTextColor;
 
     protected boolean animate = true;//是否需要动画
     protected boolean animateStarted = false;//动画是否已经开始
+
+
 
     public static class XCoordinateBulgeDirection {
         private XCoordinateBulgeDirection() {
@@ -105,7 +107,7 @@ public abstract class BaseCoordinateView extends CustomView {
         contentPadding = (int) ViewUtil.dp2px(context, 5);
         xCoordinateBulgeDistance = (int) ViewUtil.dp2px(context, 5);
         xCoordinateBulgeDirection = XCoordinateBulgeDirection.DOWN;
-        coodinatateColor = Color.BLACK;
+        coordinatateColor = Color.BLACK;
 
         arrowHeight = (int) ViewUtil.dp2px(context, 5);
         arrowWidth = arrowHeight;
@@ -114,8 +116,8 @@ public abstract class BaseCoordinateView extends CustomView {
         unitDescTextColor = yTextColor;
 
 
-        xCoodinateUnitDesc = "";
-        yCoodinateUnitDesc = "";
+        xCoordinateUnitDesc = "";
+        yCoordinateUnitDesc = "";
     }
 
     @Override
@@ -177,22 +179,22 @@ public abstract class BaseCoordinateView extends CustomView {
         }
     }
 
-    public void setxCoodinateDatas(List<Integer> xCoodinateDatas) {
+    public void setxCoordinateDatas(List<Integer> xCoordinateDatas) {
 
-        checkEmpty(xCoodinateDatas, "xCoodinateDatas");
+        checkEmpty(xCoordinateDatas, "xCoordinateDatas");
 
-        this.xCoodinateDatas = xCoodinateDatas;
+        this.xCoordinateDatas = xCoordinateDatas;
 
-        if (null == yCoodinateDatas || yCoodinateDatas.isEmpty() || null == contentDatas || contentDatas.isEmpty()) {
+        if (null == yCoordinateDatas || yCoordinateDatas.isEmpty() || null == contentDatas || contentDatas.isEmpty()) {
             return;
         }
         invalidate();
     }
 
-    public void setyCoodinateDatas(List<Integer> yCoodinateDatas) {
-        checkEmpty(yCoodinateDatas, "yCoodinateDatas");
-        this.yCoodinateDatas = yCoodinateDatas;
-        if (null == xCoodinateDatas || xCoodinateDatas.isEmpty() || null == contentDatas || contentDatas.isEmpty()) {
+    public void setyCoordinateDatas(List<Integer> yCoordinateDatas) {
+        checkEmpty(yCoordinateDatas, "yCoordinateDatas");
+        this.yCoordinateDatas = yCoordinateDatas;
+        if (null == xCoordinateDatas || xCoordinateDatas.isEmpty() || null == contentDatas || contentDatas.isEmpty()) {
 
             return;
         }
@@ -220,9 +222,9 @@ public abstract class BaseCoordinateView extends CustomView {
         }
     }
 
-    public void setCoodinatateColor(int coodinatateColor) {
-        if (this.coodinatateColor != coodinatateColor) {
-            this.coodinatateColor = coodinatateColor;
+    public void setCoordinatateColor(int coordinatateColor) {
+        if (this.coordinatateColor != coordinatateColor) {
+            this.coordinatateColor = coordinatateColor;
             invalidate();
         }
     }
@@ -232,7 +234,7 @@ public abstract class BaseCoordinateView extends CustomView {
 
         this.contentDatas = contentDatas;
         initAnimator(animate, contentDatas);
-        if (null == xCoodinateDatas || xCoodinateDatas.isEmpty() || null == yCoodinateDatas || yCoodinateDatas
+        if (null == xCoordinateDatas || xCoordinateDatas.isEmpty() || null == yCoordinateDatas || yCoordinateDatas
                 .isEmpty()) {
             return;
         }
@@ -246,16 +248,16 @@ public abstract class BaseCoordinateView extends CustomView {
     }
 
 
-    public void setFullData(List<Integer> xCoodinateDatas, List<Integer> yCoodinateDatas, List<ContentData>
+    public void setFullData(List<Integer> xCoordinateDatas, List<Integer> yCoordinateDatas, List<ContentData>
             contentDatas) {
 
 
-        this.xCoodinateDatas = xCoodinateDatas;
-        this.yCoodinateDatas = yCoodinateDatas;
+        this.xCoordinateDatas = xCoordinateDatas;
+        this.yCoordinateDatas = yCoordinateDatas;
         this.contentDatas = contentDatas;
 
-        checkEmpty(xCoodinateDatas, "xCoodinateDatas");
-        checkEmpty(yCoodinateDatas, "yCoodinateDatas");
+        checkEmpty(xCoordinateDatas, "xCoordinateDatas");
+        checkEmpty(yCoordinateDatas, "yCoordinateDatas");
         checkEmpty(contentDatas, "contentDatas");
         initAnimator(animate, contentDatas);
 
@@ -268,16 +270,16 @@ public abstract class BaseCoordinateView extends CustomView {
         }
     }
 
-    public void setxCoodinateUnitDesc(String xCoodinateUnitDesc) {
-        if (!this.xCoodinateUnitDesc.equals(xCoodinateUnitDesc)) {
-            this.xCoodinateUnitDesc = xCoodinateUnitDesc;
+    public void setxCoordinateUnitDesc(String xCoordinateUnitDesc) {
+        if (!this.xCoordinateUnitDesc.equals(xCoordinateUnitDesc)) {
+            this.xCoordinateUnitDesc = xCoordinateUnitDesc;
             invalidate();
         }
     }
 
-    public void setyCoodinateUnitDesc(String yCoodinateUnitDesc) {
-        if (!this.yCoodinateUnitDesc.equals(yCoodinateUnitDesc)) {
-            this.yCoodinateUnitDesc = yCoodinateUnitDesc;
+    public void setyCoordinateUnitDesc(String yCoordinateUnitDesc) {
+        if (!this.yCoordinateUnitDesc.equals(yCoordinateUnitDesc)) {
+            this.yCoordinateUnitDesc = yCoordinateUnitDesc;
             invalidate();
         }
     }
@@ -316,40 +318,40 @@ public abstract class BaseCoordinateView extends CustomView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        drawCoodrinate(canvas);
+        drawCoordinate(canvas);
     }
 
-    private float getMaxTextWidth(List coodinateDatas, Paint paint) {
-        float[] widths = new float[coodinateDatas.size()];
-        for (int i = 0, length = coodinateDatas.size(); i < length; i++) {
-            float textWidth = getTextWidth(String.valueOf(coodinateDatas.get(i)), paint);
+    private float getMaxTextWidth(List coordinateDatas, Paint paint) {
+        float[] widths = new float[coordinateDatas.size()];
+        for (int i = 0, length = coordinateDatas.size(); i < length; i++) {
+            float textWidth = getTextWidth(String.valueOf(coordinateDatas.get(i)), paint);
             widths[i] = textWidth;
         }
         return MathUtil.max(widths);
     }
 
-    protected void drawCoodrinate(Canvas canvas) {
+    protected void drawCoordinate(Canvas canvas) {
         paint.reset();
         paint.setTextSize(yTextSize);
-        float maxTextWidth = getMaxTextWidth(yCoodinateDatas, paint);
+        float maxTextWidth = getMaxTextWidth(yCoordinateDatas, paint);
 
         paint.setTextSize(xTextSize);
 
         //画x轴
-        paint.setColor(coodinatateColor);
-        int xDataSize = xCoodinateDatas.size();
+        paint.setColor(coordinatateColor);
+        int xDataSize = xCoordinateDatas.size();
         float textHeight = getTextHeight(paint);
 
-        int coodinateXStartX = (int) (getPaddingLeft() + contentPadding + maxTextWidth + textCoordinatePadding);
-        int coodinateXStartY = (int) (height - getPaddingBottom() - contentPadding - textHeight -
+        int coordinateXStartX = (int) (getPaddingLeft() + contentPadding + maxTextWidth + textCoordinatePadding);
+        int coordinateXStartY = (int) (height - getPaddingBottom() - contentPadding - textHeight -
                 textCoordinatePadding);
-        int coodinateXStopX = width - getPaddingRight() - contentPadding;
-        int coodinateXStopY = coodinateXStartY;
-        canvas.drawLine(coodinateXStartX, coodinateXStartY, coodinateXStopX, coodinateXStopY, paint);
+        int coordinateXStopX = width - getPaddingRight() - contentPadding;
+        int coordinateXStopY = coordinateXStartY;
+        canvas.drawLine(coordinateXStartX, coordinateXStartY, coordinateXStopX, coordinateXStopY, paint);
 
 
         //画x轴数字
-        int xCoordinateDistance = coodinateXStopX - coodinateXStartX;
+        int xCoordinateDistance = coordinateXStopX - coordinateXStartX;
         int xSpacing = xCoordinateDistance / xDataSize;
 
 
@@ -365,19 +367,21 @@ public abstract class BaseCoordinateView extends CustomView {
 
         int arrowUpX = 0;//x轴三角形x坐标
         int arrowUpY = 0;//x轴三角形y坐标
+
+        boolean isXCoordinateDataInBulge= isXCoordinateDataInBulge();//是否在x轴凸起部分
         for (int i = 0, size = xDataSize; i < size; i++) {
             //画x轴数字
             paint.setColor(xTextColor);
-            String text = String.valueOf(xCoodinateDatas.get(i));
+            String text = String.valueOf(xCoordinateDatas.get(i));
             paint.getTextBounds(text, 0, text.length(), textBound);
-            textStartX = coodinateXStartX + i * xSpacing + xSpacing / 2 - textBound.width() / 2;
+            textStartX = isXCoordinateDataInBulge?coordinateXStartX + i * xSpacing - textBound.width() / 2:coordinateXStartX + i * xSpacing + xSpacing / 2 - textBound.width() / 2;
             textStartY = height - paddingBottom - contentPadding;
             canvas.drawText(text, textStartX, textStartY, paint);
 
             //画x轴凸起部分
-            paint.setColor(coodinatateColor);
-            xCoodinateBuglyStartX = textStartX + textBound.width() / 2 + xSpacing / 2;
-            xCoodinateBuglyStartY = coodinateXStartY;
+            paint.setColor(coordinatateColor);
+            xCoodinateBuglyStartX = isXCoordinateDataInBulge?textStartX + textBound.width() / 2 + xSpacing:textStartX + textBound.width() / 2 + xSpacing / 2;
+            xCoodinateBuglyStartY = coordinateXStartY;
             xCoodinateBuglyStopX = xCoodinateBuglyStartX;
             if (xCoordinateBulgeDirection == XCoordinateBulgeDirection.UP) {
                 xCoodinateBuglyStopY = xCoodinateBuglyStartY - xCoordinateBulgeDistance;
@@ -388,14 +392,14 @@ public abstract class BaseCoordinateView extends CustomView {
             }
 
             if (i == size - 1) {//最后一个就画箭头
-                arrowUpX = coodinateXStopX - arrowWidth;
-                arrowUpY = coodinateXStartY - arrowHeight;
+                arrowUpX = coordinateXStopX - arrowWidth;
+                arrowUpY = coordinateXStartY - arrowHeight;
                 paint.setStrokeJoin(Paint.Join.MITER);//设置拐角为尖的
-                canvas.drawLine(coodinateXStopX, coodinateXStopY, arrowUpX, arrowUpY, paint);
+                canvas.drawLine(coordinateXStopX, coordinateXStopY, arrowUpX, arrowUpY, paint);
 
                 int arrowDownX = arrowUpX;
-                int arrowDownY = coodinateXStartY + arrowHeight;
-                canvas.drawLine(coodinateXStopX, coodinateXStopY, arrowDownX, arrowDownY, paint);
+                int arrowDownY = coordinateXStartY + arrowHeight;
+                canvas.drawLine(coordinateXStopX, coordinateXStopY, arrowDownX, arrowDownY, paint);
 
 
             } else {
@@ -404,48 +408,48 @@ public abstract class BaseCoordinateView extends CustomView {
             }
         }
         //画x轴单位说明
-        if (!TextUtils.isEmpty(xCoodinateUnitDesc)) {
+        if (!TextUtils.isEmpty(xCoordinateUnitDesc)) {
             paint.setTextSize(unitDescTextSize);
             paint.setColor(unitDescTextColor);
-            paint.getTextBounds(xCoodinateUnitDesc, 0, xCoodinateUnitDesc.length(), textBound);
+            paint.getTextBounds(xCoordinateUnitDesc, 0, xCoordinateUnitDesc.length(), textBound);
             textStartX = arrowUpX - textBound.width();
             textStartY = arrowUpY;
-            canvas.drawText(xCoodinateUnitDesc, textStartX, textStartY, paint);
+            canvas.drawText(xCoordinateUnitDesc, textStartX, textStartY, paint);
         }
 
 
         int paddingTop = getPaddingTop();
 
         //画y轴
-        int coodinateYStartX = coodinateXStartX;
-        int coodinateYStartY = coodinateXStartY;
-        int coodinateYStopX = coodinateYStartX;
-        int coodinateYStopY = paddingTop + contentPadding;
-        canvas.drawLine(coodinateYStartX, coodinateYStartY, coodinateYStopX, coodinateYStopY, paint);
+        int coordinateYStartX = coordinateXStartX;
+        int coordinateYStartY = coordinateXStartY;
+        int coordinateYStopX = coordinateYStartX;
+        int coordinateYStopY = paddingTop + contentPadding;
+        canvas.drawLine(coordinateYStartX, coordinateYStartY, coordinateYStopX, coordinateYStopY, paint);
 
         //画y轴箭头
-        int arrowLeftX = coodinateYStopX - arrowHeight;
-        int arrowLeftY = coodinateYStopY + arrowWidth;
-        int arrowRightX = coodinateYStopX + arrowHeight;
+        int arrowLeftX = coordinateYStopX - arrowHeight;
+        int arrowLeftY = coordinateYStopY + arrowWidth;
+        int arrowRightX = coordinateYStopX + arrowHeight;
         int arrowRightY = arrowLeftY;
-        canvas.drawLine(coodinateYStopX, coodinateYStopY, arrowLeftX, arrowLeftY, paint);
-        canvas.drawLine(coodinateYStopX, coodinateYStopY, arrowRightX, arrowRightY, paint);
+        canvas.drawLine(coordinateYStopX, coordinateYStopY, arrowLeftX, arrowLeftY, paint);
+        canvas.drawLine(coordinateYStopX, coordinateYStopY, arrowRightX, arrowRightY, paint);
 
         //画y轴单位说明
-        if (!TextUtils.isEmpty(yCoodinateUnitDesc)) {
+        if (!TextUtils.isEmpty(yCoordinateUnitDesc)) {
             paint.setColor(unitDescTextColor);
             paint.setTextSize(unitDescTextSize);
-            paint.getTextBounds(yCoodinateUnitDesc, 0, yCoodinateUnitDesc.length(), textBound);
-            textStartX = coodinateXStartX + textCoordinatePadding;
+            paint.getTextBounds(yCoordinateUnitDesc, 0, yCoordinateUnitDesc.length(), textBound);
+            textStartX = coordinateXStartX + textCoordinatePadding;
             textStartY = arrowLeftY + textBound.height();
-            canvas.drawText(yCoodinateUnitDesc, textStartX, textStartY, paint);
+            canvas.drawText(yCoordinateUnitDesc, textStartX, textStartY, paint);
         }
 
 
         int paddingLeft = getPaddingLeft();
-        int yDataSize = yCoodinateDatas.size();
-        int yCoodinateDistance = coodinateYStartY - coodinateYStopY;
-        int ySpacing = yCoodinateDistance / yDataSize;
+        int yDataSize = yCoordinateDatas.size();
+        int yCoordinateDistance = coordinateYStartY - coordinateYStopY;
+        int ySpacing = yCoordinateDistance / yDataSize;
 
         int contentLineStartX = 0;
         int contentLineStartY = 0;
@@ -458,41 +462,48 @@ public abstract class BaseCoordinateView extends CustomView {
             //画y轴数字
             paint.setTextSize(yTextSize);
             paint.setColor(yTextColor);
-            String text = String.valueOf(yCoodinateDatas.get(i));
+            String text = String.valueOf(yCoordinateDatas.get(i));
             paint.getTextBounds(text, 0, text.length(), textBound);
             textStartX = (int) (paddingLeft + contentPadding + maxTextWidth);
-            textStartY = coodinateYStartY - i * ySpacing + textBound.height() / 2;
+            textStartY = coordinateYStartY - i * ySpacing + textBound.height() / 2;
             canvas.drawText(text, textStartX, textStartY, paint);
 
 
             //画内容横线
-            paint.setColor(coodinatateColor);
-            contentLineStartX = coodinateXStartX;
-            contentLineStartY = coodinateYStartY - i * ySpacing;
-            contentLineStopX = coodinateXStopX;
+            paint.setColor(coordinatateColor);
+            contentLineStartX = coordinateXStartX;
+            contentLineStartY = coordinateYStartY - i * ySpacing;
+            contentLineStopX = coordinateXStopX;
             contentLineStopY = contentLineStartY;
 
             canvas.drawLine(contentLineStartX, contentLineStartY, contentLineStopX, contentLineStopY, paint);
         }
 
-        onDrawSelfContent(canvas, coodinateXStartX, coodinateXStartY, coodinateXStopX, coodinateXStopY, coodinateYStartX, coodinateYStartY, coodinateYStopX, coodinateYStopY);
+        onDrawSelfContent(canvas, coordinateXStartX, coordinateXStartY, coordinateXStopX, coordinateXStopY, coordinateYStartX, coordinateYStartY, coordinateYStopX, coordinateYStopY);
     }
+
+    /**
+     * x轴数据是否在x轴凸起部分
+     * @return boolean
+     */
+    protected abstract boolean isXCoordinateDataInBulge();
+
 
     /**
      * 画自己
      * @param canvas
-     * @param coodinateXStartX x轴开始横坐标
-     * @param coodinateXStartY x轴开始纵坐标
-     * @param coodinateXStopX x轴结束横坐标
-     * @param coodinateXStopY x轴结束纵坐标
-     * @param coodinateYStartX y轴开始横坐标
-     * @param coodinateYStartY y轴开始纵坐标
-     * @param coodinateYStopX y轴结束横坐标
-     * @param coodinateYStopY y轴结束纵坐标
+     * @param coordinateXStartX x轴开始横坐标
+     * @param coordinateXStartY x轴开始纵坐标
+     * @param coordinateXStopX x轴结束横坐标
+     * @param coordinateXStopY x轴结束纵坐标
+     * @param coordinateYStartX y轴开始横坐标
+     * @param coordinateYStartY y轴开始纵坐标
+     * @param coordinateYStopX y轴结束横坐标
+     * @param coordinateYStopY y轴结束纵坐标
      */
-    protected abstract void onDrawSelfContent(Canvas canvas, int coodinateXStartX, int coodinateXStartY, int
-            coodinateXStopX, int coodinateXStopY, int coodinateYStartX, int coodinateYStartY, int coodinateYStopX,
-                                              int coodinateYStopY);
+    protected abstract void onDrawSelfContent(Canvas canvas, int coordinateXStartX, int coordinateXStartY, int
+            coordinateXStopX, int coordinateXStopY, int coordinateYStartX, int coordinateYStartY, int coordinateYStopX,
+                                              int coordinateYStopY);
 }
 
 
