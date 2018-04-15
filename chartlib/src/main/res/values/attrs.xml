@@ -15,9 +15,9 @@
             <enum name="up" value="1"/>
             <enum name="down" value="2"/>
         </attr>
-        <attr name="coodinatateColor" format="color|reference"/>
-        <attr name="xCoodinateUnitDesc" format="string|reference"/>
-        <attr name="yCoodinateUnitDesc" format="string|reference"/>
+        <attr name="coordinatateColor" format="color|reference"/>
+        <attr name="xCoordinateUnitDesc" format="string|reference"/>
+        <attr name="yCoordinateUnitDesc" format="string|reference"/>
         <attr name="unitDescTextSize" format="dimension|reference"/>
         <attr name="unitDescTextColor" format="color|reference"/>
         <attr name="animate" format="boolean|reference"/>
