@@ -8,6 +8,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.SparseArray;
@@ -132,6 +133,11 @@ public class StatisticsBar extends BaseCoordinateView {
                 unitDescTextColor);
         animate = ViewUtil.optBoolean(typedArray, R.styleable.StatisticsBar_animate, true);
 
+
+
+        if(null!=typedArray){
+            typedArray.recycle();
+        }
     }
 
 
@@ -143,7 +149,7 @@ public class StatisticsBar extends BaseCoordinateView {
 
     }
 
-    public void setStatisticBarColor(int statisticBarColor) {
+    public void setStatisticBarColor(@ColorInt int statisticBarColor) {
         if (this.statisticBarColor != statisticBarColor) {
             this.statisticBarColor = statisticBarColor;
             invalidate();

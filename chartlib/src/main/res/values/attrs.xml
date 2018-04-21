@@ -1,27 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <attr name="xTextSize" format="dimension|reference"/>
+    <attr name="yTextSize" format="dimension|reference"/>
+    <attr name="xTextColor" format="color|reference"/>
+    <attr name="yTextColor" format="color|reference"/>
+    <attr name="textCoordinatePadding" format="dimension|reference"/>
+    <attr name="contentPadding" format="dimension|reference"/>
+    <attr name="xCoordinateBulgeDistance" format="dimension|reference"/>
+
+    <attr name="xCoordinateBulgeDirection" format="enum">
+        <enum name="up" value="1"/>
+        <enum name="down" value="2"/>
+    </attr>
+    <attr name="coordinatateColor" format="color|reference"/>
+    <attr name="xCoordinateUnitDesc" format="string|reference"/>
+    <attr name="yCoordinateUnitDesc" format="string|reference"/>
+    <attr name="unitDescTextSize" format="dimension|reference"/>
+    <attr name="unitDescTextColor" format="color|reference"/>
+    <attr name="animate" format="boolean|reference"/>
+
+
     <declare-styleable name="StatisticsBar">
-        <attr name="xTextSize" format="dimension|reference"/>
-        <attr name="yTextSize" format="dimension|reference"/>
-        <attr name="xTextColor" format="color|reference"/>
-        <attr name="yTextColor" format="color|reference"/>
+        <attr name="xTextSize" />
+        <attr name="yTextSize" />
+        <attr name="xTextColor" />
+        <attr name="yTextColor" />
         <attr name="statisticBarColor" format="color|reference"/>
         <attr name="statisticBarWidth" format="dimension|reference"/>
-        <attr name="textCoordinatePadding" format="dimension|reference"/>
-        <attr name="contentPadding" format="dimension|reference"/>
-        <attr name="xCoordinateBulgeDistance" format="dimension|reference"/>
+        <attr name="textCoordinatePadding" />
+        <attr name="contentPadding" />
+        <attr name="xCoordinateBulgeDistance" />
 
-        <attr name="xCoordinateBulgeDirection" format="enum">
-            <enum name="up" value="1"/>
-            <enum name="down" value="2"/>
-        </attr>
-        <attr name="coordinatateColor" format="color|reference"/>
-        <attr name="xCoordinateUnitDesc" format="string|reference"/>
-        <attr name="yCoordinateUnitDesc" format="string|reference"/>
-        <attr name="unitDescTextSize" format="dimension|reference"/>
-        <attr name="unitDescTextColor" format="color|reference"/>
-        <attr name="animate" format="boolean|reference"/>
-
+        <attr name="xCoordinateBulgeDirection" />
+        <attr name="coordinatateColor" />
+        <attr name="xCoordinateUnitDesc" />
+        <attr name="yCoordinateUnitDesc" />
+        <attr name="unitDescTextSize" />
+        <attr name="unitDescTextColor"/>
+        <attr name="animate" />
 
     </declare-styleable>
+
+
+
+    <declare-styleable name="LineView">
+        <attr name="xTextSize" />
+        <attr name="yTextSize" />
+        <attr name="xTextColor" />
+        <attr name="yTextColor" />
+        <attr name="textCoordinatePadding" />
+        <attr name="contentPadding" />
+        <attr name="xCoordinateBulgeDistance" />
+
+        <attr name="xCoordinateBulgeDirection" />
+        <attr name="coordinatateColor" />
+        <attr name="xCoordinateUnitDesc" />
+        <attr name="yCoordinateUnitDesc" />
+        <attr name="unitDescTextSize" />
+        <attr name="unitDescTextColor" />
+        <attr name="animate" />
+
+        <attr name="pointRadius" format="dimension|reference"/>
+        <attr name="lineColor" format="color|reference"/>
+
+        <attr name="pointType" format="enum">
+            <enum name="circle" value="1"/>
+            <enum name="rect" value="2"/>
+            <enum name="roundrect" value="3"/>
+        </attr>
+
+        <attr name="contentTextSize" format="dimension|reference"/>
+        <attr name="contentTextColor" format="color|reference"/>
+        <attr name="roundDegree" format="dimension|reference"/>
+        <attr name="lineWidth" format="dimension|reference"/>
+
+    </declare-styleable>
+
+
 </resources>
