@@ -144,14 +144,14 @@ public abstract class BaseCoordinateView extends CustomView {
 
     }
 
-    public void setxTextSize(int xTextSize) {
+    public void setxTextSize(float xTextSize) {
         if (this.xTextSize != xTextSize) {
             this.xTextSize = xTextSize;
             invalidate();
         }
     }
 
-    public void setyTextSize(int yTextSize) {
+    public void setyTextSize(float yTextSize) {
         if (this.yTextSize != yTextSize) {
             this.yTextSize = yTextSize;
             invalidate();
@@ -172,7 +172,7 @@ public abstract class BaseCoordinateView extends CustomView {
         }
     }
 
-    public void setTextCoordinatePadding(int textCoordinatePadding) {
+    public void setTextCoordinatePadding(float textCoordinatePadding) {
         if (this.textCoordinatePadding != textCoordinatePadding) {
             this.textCoordinatePadding = textCoordinatePadding;
             invalidate();
@@ -201,14 +201,14 @@ public abstract class BaseCoordinateView extends CustomView {
         invalidate();
     }
 
-    public void setContentPadding(int contentPadding) {
+    public void setContentPadding(float contentPadding) {
         if (this.contentPadding != contentPadding) {
             this.contentPadding = contentPadding;
             invalidate();
         }
     }
 
-    public void setxCoordinateBulgeDistance(int xCoordinateBulgeDistance) {
+    public void setxCoordinateBulgeDistance(float xCoordinateBulgeDistance) {
         if (this.xCoordinateBulgeDistance != xCoordinateBulgeDistance) {
             this.xCoordinateBulgeDistance = xCoordinateBulgeDistance;
             invalidate();
@@ -284,7 +284,7 @@ public abstract class BaseCoordinateView extends CustomView {
         }
     }
 
-    public void setUnitDescTextSize(int unitDescTextSize) {
+    public void setUnitDescTextSize(float unitDescTextSize) {
         if (this.unitDescTextSize != unitDescTextSize) {
             this.unitDescTextSize = unitDescTextSize;
             invalidate();

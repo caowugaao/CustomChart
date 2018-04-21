@@ -70,6 +70,10 @@ public class LineView extends BaseCoordinateView {
         pointRectF = new RectF();
     }
 
+    public void setPointRadius(){
+
+    }
+
 
     @Override
     public void initAnimator(boolean animate, List<ContentData> contentDatas) {
