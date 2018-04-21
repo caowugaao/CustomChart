@@ -27,7 +27,7 @@ import java.util.List;
 public class StatisticsBar extends BaseCoordinateView {
 
     private int statisticBarColor;//柱状颜色
-    private int statisticBarWidth;//柱状宽度
+    private float statisticBarWidth;//柱状宽度
     private float dp2;
 
     private SparseIntArray heightValueMap;
@@ -57,7 +57,7 @@ public class StatisticsBar extends BaseCoordinateView {
     private void init(Context context, AttributeSet attrs) {
 
         statisticBarColor = Color.BLUE;
-        statisticBarWidth = (int) ViewUtil.dp2px(context, 10);
+        statisticBarWidth =  ViewUtil.dp2px(context, 10);
         dp2 = ViewUtil.dp2px(context, 2);
 
         initAttr(context, attrs);
@@ -150,7 +150,7 @@ public class StatisticsBar extends BaseCoordinateView {
         }
     }
 
-    public void setStatisticBarWidth(int statisticBarWidth) {
+    public void setStatisticBarWidth(float statisticBarWidth) {
         if (this.statisticBarWidth != statisticBarWidth) {
             this.statisticBarWidth = statisticBarWidth;
             invalidate();
