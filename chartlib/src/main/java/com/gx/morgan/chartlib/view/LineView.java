@@ -1,16 +1,22 @@
 package com.gx.morgan.chartlib.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
+import com.gx.morgan.chartlib.R;
 import com.gx.morgan.chartlib.utils.ViewUtil;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
 /**
@@ -21,21 +27,26 @@ import java.util.List;
 public class LineView extends BaseCoordinateView {
 
 
-    private int pointRadius;
-    private int lineColor;
-    private int pointType;
+    private float pointRadius;//拐点半径，如果pointType是方形或者圆角方形，则方形长度等于2倍pointRadius，
+    private int lineColor;//连线颜色
+    private int pointType;//拐点类型，圆形、方形、圆角方形
 
-    private int contentTextSize;
-    private int contextTextColor;
+    private float contentTextSize;//内容文字大小
+    private int contentTextColor;//内容文字字体颜色
 
-    private int roundDegree;
+    private float roundDegree;//方形拐点角度，即pointType为圆角方形才会有作用
     private RectF pointRectF;
-    private int lineWidth;
+    private float lineWidth;//连线宽度
 
     public static class PointType {
         public static final int CIRCLE = 1;
         public static final int RECT = 2;
-        public static final int ROUNDRECT = 3;
+        public static final int ROUNDRECT = 3;//圆角方形
+    }
+
+    @Retention(RetentionPolicy.CLASS)
+    @IntDef({PointType.CIRCLE, PointType.RECT,PointType.ROUNDRECT})
+    public @interface LinePointType {
     }
 
     public LineView(Context context) {
@@ -60,20 +71,109 @@ public class LineView extends BaseCoordinateView {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        pointRadius = (int) ViewUtil.dp2px(context, 5);
-        contentTextSize= (int) ViewUtil.sp(context,12);
-        contextTextColor=Color.RED;
+        pointRadius =  ViewUtil.dp2px(context, 5);
+        contentTextSize=  ViewUtil.sp(context,12);
+        contentTextColor =Color.RED;
         lineColor = Color.BLUE;
         pointType = PointType.ROUNDRECT;
-        roundDegree = (int) ViewUtil.dp2px(context, 2);
-        lineWidth = (int) ViewUtil.dp2px(context, 1);
+        roundDegree =  ViewUtil.dp2px(context, 2);
+        lineWidth =  ViewUtil.dp2px(context, 1);
         pointRectF = new RectF();
+
+        initAttr(context,attrs);
     }
 
-    public void setPointRadius(){
+    private void initAttr(Context context, AttributeSet attrs) {
 
+        TypedArray typedArray = null;
+        if (attrs != null) {
+            typedArray = context.obtainStyledAttributes(attrs, R.styleable.LineView);
+        }
+        xTextSize = ViewUtil.optPixelSize(typedArray, R.styleable.LineView_xTextSize, xTextSize);
+        yTextSize = ViewUtil.optPixelSize(typedArray, R.styleable.LineView_yTextSize, yTextSize);
+        xTextColor = ViewUtil.optColor(typedArray, R.styleable.LineView_xTextColor, xTextColor);
+        yTextColor = ViewUtil.optColor(typedArray, R.styleable.LineView_yTextColor, yTextColor);
+        textCoordinatePadding = ViewUtil.optPixelSize(typedArray, R.styleable.LineView_textCoordinatePadding,
+                textCoordinatePadding);
+        contentPadding = ViewUtil.optPixelSize(typedArray, R.styleable.LineView_contentPadding, contentPadding);
+        xCoordinateBulgeDistance = ViewUtil.optPixelSize(typedArray, R.styleable
+                .LineView_xCoordinateBulgeDistance, xCoordinateBulgeDistance);
+        xCoordinateBulgeDirection = ViewUtil.optInt(typedArray, R.styleable.LineView_xCoordinateBulgeDirection,
+                XCoordinateBulgeDirection.DOWN);
+        coordinatateColor = ViewUtil.optColor(typedArray, R.styleable.LineView_coordinatateColor, coordinatateColor);
+        xCoordinateUnitDesc = ViewUtil.optString(typedArray, R.styleable.LineView_xCoordinateUnitDesc,
+                xCoordinateUnitDesc);
+        yCoordinateUnitDesc = ViewUtil.optString(typedArray, R.styleable.LineView_yCoordinateUnitDesc,
+                yCoordinateUnitDesc);
+        unitDescTextSize = ViewUtil.optPixelSize(typedArray, R.styleable.LineView_unitDescTextSize,
+                unitDescTextSize);
+        unitDescTextColor = ViewUtil.optColor(typedArray, R.styleable.LineView_unitDescTextColor,
+                unitDescTextColor);
+        animate = ViewUtil.optBoolean(typedArray, R.styleable.LineView_animate, true);
+
+
+
+        pointRadius=ViewUtil.optPixelSize(typedArray,R.styleable.LineView_pointRadius,pointRadius);
+        lineColor=ViewUtil.optColor(typedArray,R.styleable.LineView_lineColor,lineColor);
+        pointType=ViewUtil.optInt(typedArray,R.styleable.LineView_pointType,pointType);
+        contentTextSize=ViewUtil.optPixelSize(typedArray,R.styleable.LineView_contentTextSize,contentTextSize);
+        contentTextColor =ViewUtil.optColor(typedArray,R.styleable.LineView_contentTextColor, contentTextColor);
+        roundDegree=ViewUtil.optPixelSize(typedArray,R.styleable.LineView_roundDegree,roundDegree);
+        lineWidth=ViewUtil.optPixelSize(typedArray,R.styleable.LineView_lineWidth,lineWidth);
+
+
+        if(null!=typedArray){
+            typedArray.recycle();
+        }
     }
 
+    public void setPointRadius(float pointRadius){
+        if(this.pointRadius!=pointRadius){
+            this.pointRadius=pointRadius;
+            invalidate();
+        }
+    }
+    public void setLineColor(@ColorInt int lineColor){
+        if(this.lineColor!=lineColor){
+            this.lineColor=lineColor;
+            invalidate();
+        }
+    }
+
+    public void setPointType(@LinePointType int pointType){
+        if(this.pointType!=pointType){
+            this.pointType=pointType;
+            invalidate();
+        }
+    }
+
+    public void setContentTextSize(float contentTextSize){
+            if(this.contentTextSize!=contentTextSize){
+                this.contentTextSize=contentTextSize;
+                invalidate();
+            }
+    }
+
+    public void setContentTextColor(@ColorInt int contentTextColor){
+        if(this.contentTextColor != contentTextColor){
+            this.contentTextColor = contentTextColor;
+            invalidate();
+        }
+    }
+
+    public void setLineWidth(float lineWidth){
+        if(this.lineWidth!=lineWidth){
+            this.lineWidth=lineWidth;
+            invalidate();
+        }
+    }
+
+    public void setRoundDegree(float roundDegree){
+        if(this.roundDegree!=roundDegree){
+            this.roundDegree=roundDegree;
+            invalidate();
+        }
+    }
 
     @Override
     public void initAnimator(boolean animate, List<ContentData> contentDatas) {
@@ -152,7 +252,7 @@ public class LineView extends BaseCoordinateView {
 
     private void drawConentText(Canvas canvas, float pointX, float pointY, ContentData contentData) {
         paint.setTextSize(contentTextSize);
-        paint.setColor(contextTextColor);
+        paint.setColor(contentTextColor);
         String text = String.valueOf(contentData.y);
         paint.getTextBounds(text, 0, text.length(), textBound);
 

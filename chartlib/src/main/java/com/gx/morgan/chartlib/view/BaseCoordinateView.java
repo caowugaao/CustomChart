@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -158,14 +159,14 @@ public abstract class BaseCoordinateView extends CustomView {
         }
     }
 
-    public void setxTextColor(int xTextColor) {
+    public void setxTextColor(@ColorInt int xTextColor) {
         if (this.xTextColor != xTextColor) {
             this.xTextColor = xTextColor;
             invalidate();
         }
     }
 
-    public void setyTextColor(int yTextColor) {
+    public void setyTextColor(@ColorInt int yTextColor) {
         if (this.yTextColor != yTextColor) {
             this.yTextColor = yTextColor;
             invalidate();
@@ -222,7 +223,7 @@ public abstract class BaseCoordinateView extends CustomView {
         }
     }
 
-    public void setCoordinatateColor(int coordinatateColor) {
+    public void setCoordinatateColor(@ColorInt int coordinatateColor) {
         if (this.coordinatateColor != coordinatateColor) {
             this.coordinatateColor = coordinatateColor;
             invalidate();
@@ -291,7 +292,7 @@ public abstract class BaseCoordinateView extends CustomView {
         }
     }
 
-    public void setUnitDescTextColor(int unitDescTextColor) {
+    public void setUnitDescTextColor(@ColorInt int unitDescTextColor) {
         if (this.unitDescTextColor != unitDescTextColor) {
             this.unitDescTextColor = unitDescTextColor;
             invalidate();
