@@ -205,17 +205,17 @@ public class StatisticsBar extends BaseCoordinateView {
     }
 
 
-    private void drawSingleBar(Canvas canvas, int coodinateXStartX, int coodinateXStartY, int xCoordinateDistance,
-                               int xSpacing, int xCoodinateDataRangeLength, int barHeight, ContentData contentData) {
-        int textStartX;
-        int textStartY;
+    private void drawSingleBar(Canvas canvas, float coodinateXStartX, float coodinateXStartY, float xCoordinateDistance,
+                               float xSpacing, float xCoodinateDataRangeLength, float barHeight, ContentData contentData) {
+        float textStartX;
+        float textStartY;
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(statisticBarColor);
-        int left = (int) (coodinateXStartX + (contentData.x * 1.0 / xCoodinateDataRangeLength) * xCoordinateDistance -
-                xSpacing / 2 - statisticBarWidth / 2);
-        int top = coodinateXStartY - barHeight;
-        int right = left + statisticBarWidth;
-        int bottom = coodinateXStartY;
+        float left = (float) (coodinateXStartX + (contentData.x * 1.0 / xCoodinateDataRangeLength) * xCoordinateDistance -
+                        xSpacing / 2 - statisticBarWidth / 2);
+        float top = coodinateXStartY - barHeight;
+        float right = left + statisticBarWidth;
+        float bottom = coodinateXStartY;
         canvas.drawRect(left, top, right, bottom, paint);
 
 
@@ -242,18 +242,18 @@ public class StatisticsBar extends BaseCoordinateView {
      * @param coordinateYStopY y轴结束纵坐标
      */
     @Override
-    protected void onDrawSelfContent(Canvas canvas, int coordinateXStartX, int coordinateXStartY, int coordinateXStopX,
-                                     int coordinateXStopY, int coordinateYStartX, int coordinateYStartY, int
-                                             coordinateYStopX, int coordinateYStopY) {
+    protected void onDrawSelfContent(Canvas canvas, float coordinateXStartX, float coordinateXStartY, float coordinateXStopX,
+                                     float coordinateXStopY, float coordinateYStartX, float coordinateYStartY, float
+                                             coordinateYStopX, float coordinateYStopY) {
 
 
 
         int xDataSize= xCoordinateDatas.size();
         int yDataSize= yCoordinateDatas.size();
 
-        int yCoodinateDistance=Math.abs(coordinateYStopY - coordinateYStartY);//y轴长度
-        int xCoordinateDistance=Math.abs(coordinateXStopX -coordinateXStartX);//x轴长度
-        int xSpacing=xCoordinateDistance/xDataSize;
+        float yCoodinateDistance=Math.abs(coordinateYStopY - coordinateYStartY);//y轴长度
+        float xCoordinateDistance=Math.abs(coordinateXStopX -coordinateXStartX);//x轴长度
+        float xSpacing=xCoordinateDistance/xDataSize;
 
         //画柱状图
         int xCoordinateDataRangeLength = xCoordinateDatas.get(xDataSize - 1);//x轴数据区间长度

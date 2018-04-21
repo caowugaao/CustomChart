@@ -27,25 +27,25 @@ public abstract class BaseCoordinateView extends CustomView {
     protected int width;
     protected int height;
     protected Paint paint;
-    protected int xTextSize;
-    protected int yTextSize;
+    protected float xTextSize;
+    protected float yTextSize;
     protected int xTextColor;
     protected int yTextColor;
 
-    protected int textCoordinatePadding;//数字与坐标轴的距离
+    protected float textCoordinatePadding;//数字与坐标轴的距离
     protected Rect textBound;
     protected List<Integer> xCoordinateDatas;//x轴上的数字
     protected List<Integer> yCoordinateDatas;//y轴上的数字
-    protected int contentPadding;//内容与view边界的距离
-    protected int xCoordinateBulgeDistance;//x轴凸起距离
+    protected float contentPadding;//内容与view边界的距离
+    protected float xCoordinateBulgeDistance;//x轴凸起距离
     protected int xCoordinateBulgeDirection;//x轴凸起方向
     protected int coordinatateColor;//坐标轴颜色
-    protected int arrowHeight;//箭头高度
-    protected int arrowWidth;//箭头宽度
+    protected float arrowHeight;//箭头高度
+    protected float arrowWidth;//箭头宽度
     protected List<ContentData> contentDatas;//内容x、y数据
     protected String xCoordinateUnitDesc;//x轴单位说明
     protected String yCoordinateUnitDesc;//y轴单位说明
-    protected int unitDescTextSize;
+    protected float unitDescTextSize;
     protected int unitDescTextColor;
 
     protected boolean animate = true;//是否需要动画
@@ -98,21 +98,21 @@ public abstract class BaseCoordinateView extends CustomView {
 
     private void init(Context context) {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        xTextSize = (int) ViewUtil.sp(context, 16);
+        xTextSize =  ViewUtil.sp(context, 16);
         xTextColor = Color.BLACK;
         yTextSize = xTextSize;
         yTextColor = xTextColor;
-        textCoordinatePadding = (int) ViewUtil.dp2px(context, 5);
+        textCoordinatePadding =  ViewUtil.dp2px(context, 5);
         textBound = new Rect();
         contentPadding = (int) ViewUtil.dp2px(context, 5);
-        xCoordinateBulgeDistance = (int) ViewUtil.dp2px(context, 5);
+        xCoordinateBulgeDistance =  ViewUtil.dp2px(context, 5);
         xCoordinateBulgeDirection = XCoordinateBulgeDirection.DOWN;
         coordinatateColor = Color.BLACK;
 
-        arrowHeight = (int) ViewUtil.dp2px(context, 5);
+        arrowHeight =  ViewUtil.dp2px(context, 5);
         arrowWidth = arrowHeight;
 
-        unitDescTextSize = (int) ViewUtil.sp(context, 14);
+        unitDescTextSize =  ViewUtil.sp(context, 14);
         unitDescTextColor = yTextColor;
 
 
@@ -342,31 +342,31 @@ public abstract class BaseCoordinateView extends CustomView {
         int xDataSize = xCoordinateDatas.size();
         float textHeight = getTextHeight(paint);
 
-        int coordinateXStartX = (int) (getPaddingLeft() + contentPadding + maxTextWidth + textCoordinatePadding);
-        int coordinateXStartY = (int) (height - getPaddingBottom() - contentPadding - textHeight -
-                textCoordinatePadding);
-        int coordinateXStopX = width - getPaddingRight() - contentPadding;
-        int coordinateXStopY = coordinateXStartY;
+        float coordinateXStartX =  getPaddingLeft() + contentPadding + maxTextWidth + textCoordinatePadding;
+        float coordinateXStartY =  height - getPaddingBottom() - contentPadding - textHeight -
+                textCoordinatePadding;
+        float coordinateXStopX = width - getPaddingRight() - contentPadding;
+        float coordinateXStopY = coordinateXStartY;
         canvas.drawLine(coordinateXStartX, coordinateXStartY, coordinateXStopX, coordinateXStopY, paint);
 
 
         //画x轴数字
-        int xCoordinateDistance = coordinateXStopX - coordinateXStartX;
-        int xSpacing = xCoordinateDistance / xDataSize;
+        float xCoordinateDistance = coordinateXStopX - coordinateXStartX;
+        float xSpacing = xCoordinateDistance / xDataSize;
 
 
-        int textStartX = 0;
-        int textStartY = 0;
+        float textStartX = 0;
+        float textStartY = 0;
         int paddingBottom = getPaddingBottom();
 
-        int xCoodinateBuglyStartX = 0;
-        int xCoodinateBuglyStartY = 0;
-        int xCoodinateBuglyStopX = 0;
-        int xCoodinateBuglyStopY = 0;
+        float xCoodinateBuglyStartX = 0;
+        float xCoodinateBuglyStartY = 0;
+        float xCoodinateBuglyStopX = 0;
+        float xCoodinateBuglyStopY = 0;
 
 
-        int arrowUpX = 0;//x轴三角形x坐标
-        int arrowUpY = 0;//x轴三角形y坐标
+        float arrowUpX = 0;//x轴三角形x坐标
+        float arrowUpY = 0;//x轴三角形y坐标
 
         boolean isXCoordinateDataInBulge= isXCoordinateDataInBulge();//是否在x轴凸起部分
         for (int i = 0, size = xDataSize; i < size; i++) {
@@ -397,8 +397,8 @@ public abstract class BaseCoordinateView extends CustomView {
                 paint.setStrokeJoin(Paint.Join.MITER);//设置拐角为尖的
                 canvas.drawLine(coordinateXStopX, coordinateXStopY, arrowUpX, arrowUpY, paint);
 
-                int arrowDownX = arrowUpX;
-                int arrowDownY = coordinateXStartY + arrowHeight;
+                float arrowDownX = arrowUpX;
+                float arrowDownY = coordinateXStartY + arrowHeight;
                 canvas.drawLine(coordinateXStopX, coordinateXStopY, arrowDownX, arrowDownY, paint);
 
 
@@ -421,17 +421,17 @@ public abstract class BaseCoordinateView extends CustomView {
         int paddingTop = getPaddingTop();
 
         //画y轴
-        int coordinateYStartX = coordinateXStartX;
-        int coordinateYStartY = coordinateXStartY;
-        int coordinateYStopX = coordinateYStartX;
-        int coordinateYStopY = paddingTop + contentPadding;
+        float coordinateYStartX = coordinateXStartX;
+        float coordinateYStartY = coordinateXStartY;
+        float coordinateYStopX = coordinateYStartX;
+        float coordinateYStopY = paddingTop + contentPadding;
         canvas.drawLine(coordinateYStartX, coordinateYStartY, coordinateYStopX, coordinateYStopY, paint);
 
         //画y轴箭头
-        int arrowLeftX = coordinateYStopX - arrowHeight;
-        int arrowLeftY = coordinateYStopY + arrowWidth;
-        int arrowRightX = coordinateYStopX + arrowHeight;
-        int arrowRightY = arrowLeftY;
+        float arrowLeftX = coordinateYStopX - arrowHeight;
+        float arrowLeftY = coordinateYStopY + arrowWidth;
+        float arrowRightX = coordinateYStopX + arrowHeight;
+        float arrowRightY = arrowLeftY;
         canvas.drawLine(coordinateYStopX, coordinateYStopY, arrowLeftX, arrowLeftY, paint);
         canvas.drawLine(coordinateYStopX, coordinateYStopY, arrowRightX, arrowRightY, paint);
 
@@ -448,13 +448,13 @@ public abstract class BaseCoordinateView extends CustomView {
 
         int paddingLeft = getPaddingLeft();
         int yDataSize = yCoordinateDatas.size();
-        int yCoordinateDistance = coordinateYStartY - coordinateYStopY;
-        int ySpacing = yCoordinateDistance / yDataSize;
+        float yCoordinateDistance = coordinateYStartY - coordinateYStopY;
+        float ySpacing = yCoordinateDistance / yDataSize;
 
-        int contentLineStartX = 0;
-        int contentLineStartY = 0;
-        int contentLineStopX = 0;
-        int contentLineStopY = 0;
+        float contentLineStartX = 0;
+        float contentLineStartY = 0;
+        float contentLineStopX = 0;
+        float contentLineStopY = 0;
 
         paint.setTextAlign(Paint.Align.RIGHT);
         for (int i = 0, size = yDataSize; i < size; i++) {
@@ -501,9 +501,9 @@ public abstract class BaseCoordinateView extends CustomView {
      * @param coordinateYStopX y轴结束横坐标
      * @param coordinateYStopY y轴结束纵坐标
      */
-    protected abstract void onDrawSelfContent(Canvas canvas, int coordinateXStartX, int coordinateXStartY, int
-            coordinateXStopX, int coordinateXStopY, int coordinateYStartX, int coordinateYStartY, int coordinateYStopX,
-                                              int coordinateYStopY);
+    protected abstract void onDrawSelfContent(Canvas canvas, float coordinateXStartX, float coordinateXStartY, float
+            coordinateXStopX, float coordinateXStopY, float coordinateYStartX, float coordinateYStartY, float coordinateYStopX,
+                                              float coordinateYStopY);
 }
 
 
