@@ -23,6 +23,14 @@ public class LineView extends BaseCoordinateView {
     private int lineColor;
     private boolean isPointSolid = false;
 
+    private int pointType;
+
+    public static class PointType {
+        public static final int CIRCLE = 1;
+        public static final int RECT = 2;
+        public static final int SOLIDROUND = 3;
+    }
+
     public LineView(Context context) {
         super(context);
         init(context, null);
@@ -48,6 +56,7 @@ public class LineView extends BaseCoordinateView {
         pointRadius = (int) ViewUtil.dp2px(context, 5);
         lineColor = Color.BLUE;
         isPointSolid = false;
+        pointType = PointType.CIRCLE;
     }
 
 
@@ -71,12 +80,19 @@ public class LineView extends BaseCoordinateView {
         int xCoordinateDistance = Math.abs(coordinateXStartX - coordinateXStopX);
         int yCoordinateDistance = Math.abs(coordinateYStartY - coordinateYStopY);
 
+
+        int firstXCoordinateData = xCoordinateDatas.get(0);
         int xDataSize = xCoordinateDatas.size();
-        int xCoordinateDataRangeLength = xCoordinateDatas.get(xDataSize - 1) - xCoordinateDatas.get(0);//x轴数据区间长度
+        int xCoordinateDataRangeLength = xCoordinateDatas.get(xDataSize - 1) + xCoordinateDatas.get(xDataSize - 1) -
+                xCoordinateDatas.get(xDataSize - 2) - firstXCoordinateData;//x轴数据区间长度
+//        int xCoordinateDataRangeLength = xCoordinateDatas.get(xDataSize - 1);//x轴数据区间长度
 
         int yDataSize = yCoordinateDatas.size();
+        int firstYCoordinateData = yCoordinateDatas.get(0);
         int yCoodinateDataRangLength = yCoordinateDatas.get(yDataSize - 1) + yCoordinateDatas.get(yDataSize - 1) -
-                yCoordinateDatas.get(yDataSize - 2) - yCoordinateDatas.get(0);//y轴数据区间长度
+                yCoordinateDatas.get(yDataSize - 2) - firstYCoordinateData;//y轴数据区间长度
+//        int yCoodinateDataRangLength = yCoordinateDatas.get(yDataSize - 1) + yCoordinateDatas.get(yDataSize - 1) -
+//                yCoordinateDatas.get(yDataSize - 2) ;//y轴数据区间长度
 
         paint.setColor(lineColor);
         paint.setStyle(Paint.Style.STROKE);
@@ -91,11 +107,14 @@ public class LineView extends BaseCoordinateView {
         float prePointX = 0;
         float prePointY = 0;
         float oldStrokeWidth = paint.getStrokeWidth();
+
+
         for (int i = 0, size = contentDatas.size(); i < size; i++) {
             ContentData contentData = contentDatas.get(i);
-            pointX = (float) (coordinateXStartX + xCoordinateDistance * contentData.x * 1.0 /
+            pointX = (float) (coordinateXStartX + xCoordinateDistance * (contentData.x - firstXCoordinateData) * 1.0 /
                     xCoordinateDataRangeLength);
-            pointY = (float) (coordinateYStopY + yCoordinateDistance * contentData.y * 1.0 / yCoodinateDataRangLength);
+            pointY = yCoordinateDistance-(float) (yCoordinateDistance * (contentData.y - firstYCoordinateData) * 1.0 /
+                    yCoodinateDataRangLength);
             paint.setStrokeWidth(2 * pointRadius);
             canvas.drawPoint(pointX, pointY, paint);
             if (0 == i) {
