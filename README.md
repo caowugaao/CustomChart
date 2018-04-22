@@ -1,4 +1,9 @@
 # CustomChart
 图表控件实践
 
-![mahua](./images/柱状图.png)
+#### 柱状图
+![mahua](./images/StatisticBar.png)
+
+
+#### 折线图
+![mahua](./images/LineView.png)
