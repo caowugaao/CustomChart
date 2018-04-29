@@ -40,19 +40,19 @@ public class MainActivity extends AppCompatActivity {
 
         LayoutInflater layoutInflater = getLayoutInflater();
 
-        StatisticsBar statisticsBar= (StatisticsBar) layoutInflater.inflate(R.layout.layout_statisticbar,null);
-        setStatisticBarData(statisticsBar);
         LineView lineView= (LineView) layoutInflater.inflate(R.layout.layout_lineview,null);
         setLineViewData(lineView);
+        StatisticsBar statisticsBar= (StatisticsBar) layoutInflater.inflate(R.layout.layout_statisticbar,null);
+        setStatisticBarData(statisticsBar);
 
 
         List<View> views=new ArrayList<>(2);
-        views.add(statisticsBar);
         views.add(lineView);
+        views.add(statisticsBar);
 
         List<String> titles=new ArrayList<>(2);
-        titles.add("柱状图");
         titles.add("折线图");
+        titles.add("柱状图");
 
         ViewPagerAdapter pagerAdapter=new ViewPagerAdapter(views,titles);
         viewPager.setAdapter(pagerAdapter);

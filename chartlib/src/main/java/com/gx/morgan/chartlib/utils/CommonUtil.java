@@ -1,5 +1,7 @@
 package com.gx.morgan.chartlib.utils;
 
+import java.util.Collection;
+
 /**
  * description：
  * <br>author：caowugao
@@ -8,9 +10,13 @@ package com.gx.morgan.chartlib.utils;
 public class CommonUtil {
     private CommonUtil(){}
 
-    public static void checkEmpty(Object targetObj, String targetDesc) {
+    public static void checkNull(Object targetObj, String targetDesc) {
         if (null == targetObj) {
             throw new NullPointerException(targetDesc + " cannor be NULL");
         }
+    }
+
+    public static<T> boolean checkCollectionEmpty(Collection<T> collection){
+      return null==collection?true:collection.isEmpty();
     }
 }
