@@ -18,7 +18,7 @@
     <attr name="yCoordinateUnitDesc" format="string|reference"/>
     <attr name="unitDescTextSize" format="dimension|reference"/>
     <attr name="unitDescTextColor" format="color|reference"/>
-    <attr name="animate" format="boolean|reference"/>
+    <attr name="needAnimated" format="boolean|reference"/>
 
 
     <declare-styleable name="StatisticsBar">
@@ -38,7 +38,7 @@
         <attr name="yCoordinateUnitDesc" />
         <attr name="unitDescTextSize" />
         <attr name="unitDescTextColor"/>
-        <attr name="animate" />
+        <attr name="needAnimated" />
 
     </declare-styleable>
 
@@ -59,7 +59,7 @@
         <attr name="yCoordinateUnitDesc" />
         <attr name="unitDescTextSize" />
         <attr name="unitDescTextColor" />
-        <attr name="animate" />
+        <attr name="needAnimated" />
 
         <attr name="pointRadius" format="dimension|reference"/>
         <attr name="lineColor" format="color|reference"/>

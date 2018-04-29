@@ -16,6 +16,7 @@ import android.util.SparseIntArray;
 import android.view.animation.DecelerateInterpolator;
 
 import com.gx.morgan.chartlib.R;
+import com.gx.morgan.chartlib.utils.AnimatorUtil;
 import com.gx.morgan.chartlib.utils.ViewUtil;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class StatisticsBar extends BaseCoordinateView {
     private float statisticBarWidth;//柱状宽度
     private float dp2;
 
-    private SparseIntArray heightValueMap;
+    private SparseIntArray animationHeightValueMap;
     private SparseArray<ValueAnimator> animatorMap;
 
 
@@ -64,42 +65,42 @@ public class StatisticsBar extends BaseCoordinateView {
         initAttr(context, attrs);
     }
 
-    private void initAnimator(final int contentDataSize) {
-        if (animate) {
-
-            if (null == animatorMap) {
-                animatorMap = new SparseArray<>();
-            }
-
-            if (null == heightValueMap) {
-                heightValueMap = new SparseIntArray();
-            }
-            for (int i = 0; i < contentDataSize; i++) {
-                ValueAnimator animator = ValueAnimator.ofInt();
-                animator.setDuration(500);
-                animator.setInterpolator(new DecelerateInterpolator());
-                final int finalI = i;
-                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                        int baeHeightValue = (int) valueAnimator.getAnimatedValue();
-                        heightValueMap.put(finalI, baeHeightValue);
-                        invalidate();
-                    }
-                });
-                final int finalI1 = i;
-                animator.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation, boolean isReverse) {
-                        if (finalI1 == contentDataSize - 1) {
-                            animateStarted = false;
-                        }
-                    }
-                });
-                animatorMap.put(i, animator);
-            }
-        }
-    }
+//    private void initAnimator(final int contentDataSize) {
+//        if (needAnimated) {
+//
+//            if (null == animatorMap) {
+//                animatorMap = new SparseArray<>();
+//            }
+//
+//            if (null == animationHeightValueMap) {
+//                animationHeightValueMap = new SparseIntArray();
+//            }
+//            for (int i = 0; i < contentDataSize; i++) {
+//                ValueAnimator animator = ValueAnimator.ofInt();
+//                animator.setDuration(500);
+//                animator.setInterpolator(new DecelerateInterpolator());
+//                final int finalI = i;
+//                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                    @Override
+//                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
+//                        int baeHeightValue = (int) valueAnimator.getAnimatedValue();
+//                        animationHeightValueMap.put(finalI, baeHeightValue);
+//                        invalidate();
+//                    }
+//                });
+//                final int finalI1 = i;
+//                animator.addListener(new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationEnd(Animator animation, boolean isReverse) {
+//                        if (finalI1 == contentDataSize - 1) {
+//                            animateRunning = false;
+//                        }
+//                    }
+//                });
+//                animatorMap.put(i, animator);
+//            }
+//        }
+//    }
 
     private void initAttr(Context context, AttributeSet attrs) {
 
@@ -131,7 +132,7 @@ public class StatisticsBar extends BaseCoordinateView {
                 unitDescTextSize);
         unitDescTextColor = ViewUtil.optColor(typedArray, R.styleable.StatisticsBar_unitDescTextColor,
                 unitDescTextColor);
-        animate = ViewUtil.optBoolean(typedArray, R.styleable.StatisticsBar_animate, true);
+        needAnimated = ViewUtil.optBoolean(typedArray, R.styleable.StatisticsBar_needAnimated, true);
 
 
 
@@ -143,8 +144,16 @@ public class StatisticsBar extends BaseCoordinateView {
 
     @Override
     protected void onDetachedFromWindow() {
-        heightValueMap.clear();
-        animatorMap.clear();
+        AnimatorUtil.cancelAnimator(animatorMap);
+
+        if(null!= animationHeightValueMap){
+            animationHeightValueMap.clear();
+        }
+
+        if(null!=animatorMap){
+            animatorMap.clear();
+        }
+
         super.onDetachedFromWindow();
 
     }
@@ -166,15 +175,17 @@ public class StatisticsBar extends BaseCoordinateView {
 
 
     @Override
-    public void initAnimator(boolean animate, List<BaseCoordinateView.ContentData> contentDatas) {
-        if (animate) {
+    public void initAnimator(boolean needAnimated, List<BaseCoordinateView.ContentData> contentDatas) {
+        if (needAnimated) {
+
+            AnimatorUtil.cancelAnimator(animatorMap);
 
             if (null == animatorMap) {
                 animatorMap = new SparseArray<>();
             }
 
-            if (null == heightValueMap) {
-                heightValueMap = new SparseIntArray();
+            if (null == animationHeightValueMap) {
+                animationHeightValueMap = new SparseIntArray();
             }
 
             final int contentDataSize=contentDatas.size();
@@ -186,8 +197,8 @@ public class StatisticsBar extends BaseCoordinateView {
                 animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                        int baeHeightValue = (int) valueAnimator.getAnimatedValue();
-                        heightValueMap.put(finalI, baeHeightValue);
+                        int heightValue = (int) valueAnimator.getAnimatedValue();
+                        animationHeightValueMap.put(finalI, heightValue);
                         invalidate();
                     }
                 });
@@ -196,7 +207,7 @@ public class StatisticsBar extends BaseCoordinateView {
                     @Override
                     public void onAnimationEnd(Animator animation, boolean isReverse) {
                         if (finalI1 == contentDataSize - 1) {
-                            animateStarted = false;
+                            animateRunning = false;
                         }
                     }
                 });
@@ -269,19 +280,19 @@ public class StatisticsBar extends BaseCoordinateView {
 
         paint.setTextAlign(Paint.Align.LEFT);
 
-        if (animateStarted) {//动画是否已经开始
+        if (animateRunning) {//动画是否已经开始
 
             for (int i = 0, size = contentDatas.size(); i < size; i++) {
 
                 //画柱状
                 ContentData contentData = contentDatas.get(i);
-                statisicBarHeight = heightValueMap.get(i);
+                statisicBarHeight = animationHeightValueMap.get(i);
                 drawSingleBar(canvas, coordinateXStartX, coordinateXStartY, xCoordinateDistance, xSpacing,
                         xCoordinateDataRangeLength, statisicBarHeight, contentData);
 
             }
         } else {//动画还没开始
-            animateStarted = true;
+            animateRunning = true;
             for (int i = 0, size = contentDatas.size(); i < size; i++) {
 
                 //画柱状

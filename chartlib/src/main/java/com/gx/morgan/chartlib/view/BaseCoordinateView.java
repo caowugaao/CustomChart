@@ -49,8 +49,8 @@ public abstract class BaseCoordinateView extends CustomView {
     protected float unitDescTextSize;
     protected int unitDescTextColor;
 
-    protected boolean animate = true;//是否需要动画
-    protected boolean animateStarted = false;//动画是否已经开始
+    protected boolean needAnimated = true;//是否需要动画
+    protected boolean animateRunning = false;//动画是否已经开始
 
 
 
@@ -234,7 +234,8 @@ public abstract class BaseCoordinateView extends CustomView {
         checkEmpty(contentDatas, "contentDatas");
 
         this.contentDatas = contentDatas;
-        initAnimator(animate, contentDatas);
+        animateRunning=false;
+        initAnimator(needAnimated, contentDatas);
         if (null == xCoordinateDatas || xCoordinateDatas.isEmpty() || null == yCoordinateDatas || yCoordinateDatas
                 .isEmpty()) {
             return;
@@ -242,10 +243,10 @@ public abstract class BaseCoordinateView extends CustomView {
         invalidate();
     }
 
-    public abstract void initAnimator(boolean animate, List<ContentData> contentDatas);
+    public abstract void initAnimator(boolean needAnimated, List<ContentData> contentDatas);
 
-    public boolean isAnimateStarted() {
-        return animateStarted;
+    public boolean isAnimateRunning() {
+        return animateRunning;
     }
 
 
@@ -260,7 +261,8 @@ public abstract class BaseCoordinateView extends CustomView {
         checkEmpty(xCoordinateDatas, "xCoordinateDatas");
         checkEmpty(yCoordinateDatas, "yCoordinateDatas");
         checkEmpty(contentDatas, "contentDatas");
-        initAnimator(animate, contentDatas);
+        animateRunning=false;
+        initAnimator(needAnimated, contentDatas);
 
         invalidate();
     }
@@ -299,13 +301,17 @@ public abstract class BaseCoordinateView extends CustomView {
         }
     }
 
-    public void setAnimate(boolean animate) {
-        this.animate = animate;
-        if (animate) {
+    public void setNeedAnimated(boolean needAnimated) {
+        this.needAnimated = needAnimated;
+        if (needAnimated) {
             if (null != contentDatas && !contentDatas.isEmpty()) {
-                initAnimator(animate, contentDatas);
+                animateRunning=false;
+                initAnimator(needAnimated, contentDatas);
             }
         }
+    }
+    public boolean isNeedAnimated(){
+        return needAnimated;
     }
 
     protected static float getTextWidth(String text, Paint paint) {
