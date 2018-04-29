@@ -263,61 +263,105 @@ public class StatisticsBar extends BaseCoordinateView {
                                      float coordinateXStopY, float coordinateYStartX, float coordinateYStartY, float
                                              coordinateYStopX, float coordinateYStopY) {
 
-
-
-        int xDataSize= xCoordinateDatas.size();
-        int yDataSize= yCoordinateDatas.size();
-
-        float yCoodinateDistance=Math.abs(coordinateYStopY - coordinateYStartY);//y轴长度
-        float xCoordinateDistance=Math.abs(coordinateXStopX -coordinateXStartX);//x轴长度
-        float xSpacing=xCoordinateDistance/xDataSize;
-
-        //画柱状图
-        int xCoordinateDataRangeLength = xCoordinateDatas.get(xDataSize - 1);//x轴数据区间长度
-        int yCoodinateDataRangLength = yCoordinateDatas.get(yDataSize - 1) + yCoordinateDatas.get(yDataSize - 1) -
-                yCoordinateDatas.get(yDataSize - 2)-yCoordinateDatas.get(0);//y轴数据区间长度
-        int statisicBarHeight = 0;
-
-        paint.setTextAlign(Paint.Align.LEFT);
-
-        if (animateRunning) {//动画是否已经开始
-
-            for (int i = 0, size = contentDatas.size(); i < size; i++) {
-
-                //画柱状
-                ContentData contentData = contentDatas.get(i);
-                statisicBarHeight = animationHeightValueMap.get(i);
-                drawSingleBar(canvas, coordinateXStartX, coordinateXStartY, xCoordinateDistance, xSpacing,
-                        xCoordinateDataRangeLength, statisicBarHeight, contentData);
-
-            }
-        } else {//动画还没开始
-            animateRunning = true;
-            for (int i = 0, size = contentDatas.size(); i < size; i++) {
-
-                //画柱状
-                ContentData contentData = contentDatas.get(i);
-                statisicBarHeight = (int) ((contentData.y * 1.0 / yCoodinateDataRangLength) * yCoodinateDistance);
-                statisicBarHeight = 0 == statisicBarHeight ? (int) dp2 : statisicBarHeight;//柱状高度为0就附上2dp
-
-                ValueAnimator animator = animatorMap.get(i);
-                if (null != animator) {
-                    if (animator.isRunning()) {
-                        animator.cancel();
-                    }
-                    animator.setIntValues(0, statisicBarHeight);
-                }
-            }
-
-
-            for (int i = 0, size = contentDatas.size(); i < size; i++) {
-                ValueAnimator animator = animatorMap.get(i);
-                if (null != animator) {
-                    animator.start();
-                }
-            }
+        if(needAnimated){
+            drawHasAnimation(canvas, coordinateXStartX, coordinateXStartY, coordinateXStopX, coordinateYStartY, coordinateYStopY);
+        }
+        else {
+            drawNoAnimation(canvas,  coordinateXStartX,  coordinateXStartY,  coordinateXStopX, coordinateXStopY
+                    , coordinateYStartX,  coordinateYStartY, coordinateYStopX,  coordinateYStopY);
         }
 
+    }
+
+    private void drawNoAnimation(Canvas canvas, float coordinateXStartX, float coordinateXStartY, float
+            coordinateXStopX, float coordinateXStopY, float coordinateYStartX, float coordinateYStartY, float
+                                         coordinateYStopX, float coordinateYStopY) {
+
+        float yCoodinateDistance=Math.abs(coordinateYStopY - coordinateYStartY);//y轴长度
+        int yDataSize= yCoordinateDatas.size();
+        int yCoodinateDataRangLength = yCoordinateDatas.get(yDataSize - 1) + yCoordinateDatas.get(yDataSize - 1) -
+                yCoordinateDatas.get(yDataSize - 2)-yCoordinateDatas.get(0);//y轴数据区间长度
+
+        int xDataSize= xCoordinateDatas.size();
+        float xCoordinateDistance=Math.abs(coordinateXStopX -coordinateXStartX);//x轴长度
+        float xSpacing=xCoordinateDistance/xDataSize;
+        int xCoordinateDataRangeLength = xCoordinateDatas.get(xDataSize - 1);//x轴数据区间长度
+        paint.setTextAlign(Paint.Align.LEFT);
+        int statisicBarHeight=0;
+
+        for (int i = 0, size = contentDatas.size(); i < size; i++) {
+            //画柱状
+            ContentData contentData = contentDatas.get(i);
+            statisicBarHeight = (int) ((contentData.y * 1.0 / yCoodinateDataRangLength) * yCoodinateDistance);
+            statisicBarHeight = 0 == statisicBarHeight ? (int) dp2 : statisicBarHeight;//柱状高度为0就附上2dp
+            drawSingleBar(canvas, coordinateXStartX, coordinateXStartY, xCoordinateDistance, xSpacing,
+                    xCoordinateDataRangeLength, statisicBarHeight, contentData);
+        }
+
+    }
+
+    private void drawHasAnimation(Canvas canvas, float coordinateXStartX, float coordinateXStartY, float
+            coordinateXStopX, float coordinateYStartY, float coordinateYStopY) {
+        if (animateRunning) {//动画是否已经开始
+            drawnByAnimation(canvas,  coordinateXStartX, coordinateXStartY, coordinateXStopX);
+        } else {//动画还没开始
+            iniAnimator(coordinateYStartY,coordinateYStopY);
+            startAnimator();
+        }
+    }
+
+    private void drawnByAnimation(Canvas canvas, float coordinateXStartX,float coordinateXStartY,float coordinateXStopX) {
+
+        int xDataSize= xCoordinateDatas.size();
+        float xCoordinateDistance=Math.abs(coordinateXStopX -coordinateXStartX);//x轴长度
+        float xSpacing=xCoordinateDistance/xDataSize;
+        int xCoordinateDataRangeLength = xCoordinateDatas.get(xDataSize - 1);//x轴数据区间长度
+        paint.setTextAlign(Paint.Align.LEFT);
+        int statisicBarHeight=0;
+
+        for (int i = 0, size = contentDatas.size(); i < size; i++) {
+            //画柱状
+            ContentData contentData = contentDatas.get(i);
+            statisicBarHeight = animationHeightValueMap.get(i);
+            drawSingleBar(canvas, coordinateXStartX, coordinateXStartY, xCoordinateDistance, xSpacing,
+                    xCoordinateDataRangeLength, statisicBarHeight, contentData);
+        }
+    }
+
+    private void iniAnimator(float coordinateYStartY,float coordinateYStopY) {
+
+        float yCoodinateDistance=Math.abs(coordinateYStopY - coordinateYStartY);//y轴长度
+        int yDataSize= yCoordinateDatas.size();
+        int yCoodinateDataRangLength = yCoordinateDatas.get(yDataSize - 1) + yCoordinateDatas.get(yDataSize - 1) -
+                yCoordinateDatas.get(yDataSize - 2)-yCoordinateDatas.get(0);//y轴数据区间长度
+
+
+        int statisicBarHeight=0;
+        for (int i = 0, size = contentDatas.size(); i < size; i++) {
+
+            ContentData contentData = contentDatas.get(i);
+            statisicBarHeight = (int) ((contentData.y * 1.0 / yCoodinateDataRangLength) * yCoodinateDistance);
+            statisicBarHeight = 0 == statisicBarHeight ? (int) dp2 : statisicBarHeight;//柱状高度为0就附上2dp
+
+            ValueAnimator animator = animatorMap.get(i);
+            if (null != animator) {
+                if (animator.isRunning()) {
+                    animator.cancel();
+                }
+                animator.setIntValues(0, statisicBarHeight);
+            }
+        }
+    }
+
+
+    private void startAnimator() {
+        for (int i = 0, size = contentDatas.size(); i < size; i++) {
+            ValueAnimator animator = animatorMap.get(i);
+            if (null != animator) {
+                animator.start();
+            }
+        }
+        animateRunning = true;
     }
 
 }

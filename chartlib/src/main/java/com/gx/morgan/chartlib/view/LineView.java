@@ -329,18 +329,17 @@ public class LineView extends BaseCoordinateView {
 
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(lineWidth);
-        float oldStrokeWidth = paint.getStrokeWidth();
 
         if(!needAnimated){
-            drawNoAnimation(canvas, coordinateXStartX, coordinateXStopX, coordinateYStartY, coordinateYStopY, oldStrokeWidth);
+            drawNoAnimation(canvas, coordinateXStartX, coordinateXStopX, coordinateYStartY, coordinateYStopY);
         }
         else {
-            drawHasAnimtion(canvas, coordinateXStartX, coordinateXStopX, coordinateYStartY, coordinateYStopY, oldStrokeWidth);
+            drawHasAnimtion(canvas, coordinateXStartX, coordinateXStopX, coordinateYStartY, coordinateYStopY);
         }
     }
 
     private void drawHasAnimtion(Canvas canvas, float coordinateXStartX, float coordinateXStopX, float
-            coordinateYStartY, float coordinateYStopY, float oldStrokeWidth) {
+            coordinateYStartY, float coordinateYStopY) {
         if (!frontAnimationRunning) {//前一段动画不在运行中
 
             if (frontAnimationJustEnd) {//前一段动画刚结束，开启后一段动画
@@ -352,20 +351,20 @@ public class LineView extends BaseCoordinateView {
             if (!latterAnimationStarted) {//第一次或者重置content数据的时候，就初始化动画
                 initAnimator(coordinateYStartY,coordinateYStopY);
             } else {//前一段动画停止，后一段动画运行中，就通过后一段动画绘制
-                drawByLatterAnimator( canvas,  coordinateXStartX,  coordinateXStopX, coordinateYStartY,  coordinateYStopY,  oldStrokeWidth);
+                drawByLatterAnimator( canvas,  coordinateXStartX,  coordinateXStopX, coordinateYStartY,  coordinateYStopY);
             }
         } else {//前一段动画运行中
             if (!latterAnimationStarted) {//还没开始后一段动画
-                drawByFrontAnimator(canvas,  coordinateXStartX,  coordinateXStopX, coordinateYStartY,  coordinateYStopY,   oldStrokeWidth);
+                drawByFrontAnimator(canvas,  coordinateXStartX,  coordinateXStopX, coordinateYStartY,  coordinateYStopY);
 
             }
         }
     }
 
     private void drawNoAnimation(Canvas canvas, float coordinateXStartX, float coordinateXStopX, float
-            coordinateYStartY, float coordinateYStopY, float oldStrokeWidth) {
+            coordinateYStartY, float coordinateYStopY) {
         for (int i = 0,size=contentDatas.size(); i <size ; i++) {
-            drawSingleContentDataByHeightValue(-1, i,oldStrokeWidth, canvas,coordinateXStartX,coordinateXStopX,coordinateYStartY,coordinateYStopY);
+            drawSingleContentDataByHeightValue(-1, i, canvas,coordinateXStartX,coordinateXStopX,coordinateYStartY,coordinateYStopY);
         }
     }
 
@@ -376,13 +375,12 @@ public class LineView extends BaseCoordinateView {
      * @param coordinateXStopX
      * @param coordinateYStartY
      * @param coordinateYStopY
-     * @param oldStrokeWidth
      */
     private void drawByFrontAnimator(Canvas canvas, float coordinateXStartX, float coordinateXStopX, float
-            coordinateYStartY, float coordinateYStopY, float oldStrokeWidth) {
+            coordinateYStartY, float coordinateYStopY) {
 
         for (int i = 0, size = contentDatas.size(); i < size; i++) {
-            drawSingleContentDataByHeightValue( frontAnimationHeightValue, i, oldStrokeWidth,  canvas,  coordinateXStartX,coordinateXStopX,coordinateYStartY,coordinateYStopY);
+            drawSingleContentDataByHeightValue( frontAnimationHeightValue, i,   canvas,  coordinateXStartX,coordinateXStopX,coordinateYStartY,coordinateYStopY);
         }
     }
 
@@ -393,15 +391,14 @@ public class LineView extends BaseCoordinateView {
      * @param coordinateXStopX
      * @param coordinateYStartY
      * @param coordinateYStopY
-     * @param oldStrokeWidth
      */
     private void drawByLatterAnimator(Canvas canvas, float coordinateXStartX, float coordinateXStopX, float
-            coordinateYStartY, float coordinateYStopY, float oldStrokeWidth) {
+            coordinateYStartY, float coordinateYStopY) {
 
         for (int i = 0, size = contentDatas.size(); i < size; i++) {
             int latterAnimationHeightValue = latterAnimationHeightValueMap.get(i);
             drawSingleContentDataByHeightValue( latterAnimationHeightValue,  i
-            ,  oldStrokeWidth,  canvas,  coordinateXStartX
+            ,  canvas,  coordinateXStartX
             ,  coordinateXStopX,  coordinateYStartY
             ,  coordinateYStopY);
         }
@@ -439,7 +436,7 @@ public class LineView extends BaseCoordinateView {
     }
 
     private void drawSingleContentDataByHeightValue(float heightValue, int contentDatasIndex
-            , float oldStrokeWidth, Canvas canvas, float coordinateXStartX
+            , Canvas canvas, float coordinateXStartX
             , float coordinateXStopX, float coordinateYStartY
             , float coordinateYStopY) {
 
@@ -473,7 +470,7 @@ public class LineView extends BaseCoordinateView {
             prePointX = pointX;
             prePointY = pointY;
         } else {
-            paint.setStrokeWidth(oldStrokeWidth);
+            paint.setStrokeWidth(lineWidth);
             paint.setColor(lineColor);
             float startX = prePointX;
             float startY = prePointY;
